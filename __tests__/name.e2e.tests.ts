@@ -8,7 +8,7 @@ import { VideoType } from '../src/settings';
 describe('/videos', () => {
 	let newVideo: VideoType | null = null;
 	beforeAll(async () => {
-		await request(app).delete('/__tests__/');
+		await request(app).delete('/testing/all-data').expect(204);
 	});
 	it('GET video = []', async () => {
 		const result = await request(app).get('/videos').expect(200);

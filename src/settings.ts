@@ -69,6 +69,10 @@ let videos: VideoType[] = [
 	},
 ];
 
+app.delete('/testing/all-data', (req: Request, res: Response) => {
+	
+});
+
 app.get('/videos', (req: Request, res: Response): void => {
 	res.send(videos);
 });
