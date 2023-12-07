@@ -28,7 +28,7 @@ type UpdateVideoDto = {
 };
 
 type ErrorType = {
-	errorMessages: ErrorMessageType[];
+	errorsMessages: ErrorMessageType[];
 };
 
 type ErrorMessageType = {
@@ -93,35 +93,35 @@ app.get('/videos/:id', (req: RequestWithParams<Params>, res: Response) => {
 });
 
 app.post('/videos', (req: RequestWithBody<CreateVideoDto>, res: Response) => {
-	let errors: ErrorType = {
-		errorMessages: [],
+	const errors: ErrorType = {
+		errorsMessages: [],
 	};
 
 	let { title, author, availableResolutions } = req.body;
 
 	if (!title || title.trim().length < 1 || title.trim().length > 40) {
-		errors.errorMessages.push({ message: 'Invalid title', field: 'title' });
+		errors.errorsMessages.push({ message: 'Invalid title', field: 'title' });
 	}
 	if (!author || author.trim().length < 1 || author.trim().length > 20) {
-		errors.errorMessages.push({ message: 'Invalid author', field: 'author' });
+		errors.errorsMessages.push({ message: 'Invalid author', field: 'author' });
 	}
 
 	if (Array.isArray(availableResolutions)) {
 		availableResolutions.map((r) => {
 			!AvailableResolutions.includes(r) &&
-				errors.errorMessages.push({
+				errors.errorsMessages.push({
 					message: 'Invalid availableResolution',
 					field: 'availableResolution',
 				});
 		});
 	} else {
-		errors.errorMessages.push({
+		errors.errorsMessages.push({
 			message: 'Incorrect type',
 			field: 'availableResolution',
 		});
 	}
 
-	if (errors.errorMessages.length) {
+	if (errors.errorsMessages.length) {
 		res.status(400).send(errors);
 		return;
 	}
@@ -150,7 +150,7 @@ app.put(
 	(req: RequestWithBodyAndParams<Params, UpdateVideoDto>, res: Response) => {
 		const id = +req.params.id;
 		let errors: ErrorType = {
-			errorMessages: [],
+			errorsMessages: [],
 		};
 
 		let {
@@ -163,16 +163,16 @@ app.put(
 		} = req.body;
 
 		if (!title || title.trim().length < 1 || title.trim().length > 40) {
-			errors.errorMessages.push({ message: 'Invalid title', field: 'title' });
+			errors.errorsMessages.push({ message: 'Invalid title', field: 'title' });
 		}
 		if (!author || author.trim().length < 1 || author.trim().length > 20) {
-			errors.errorMessages.push({ message: 'Invalid author', field: 'author' });
+			errors.errorsMessages.push({ message: 'Invalid author', field: 'author' });
 		}
 
 		if (Array.isArray(availableResolutions)) {
 			availableResolutions.map((r) => {
 				!AvailableResolutions.includes(r) &&
-					errors.errorMessages.push({
+					errors.errorsMessages.push({
 						message: 'Invalid availableResolution',
 						field: 'availableResolution',
 					});
@@ -190,7 +190,7 @@ app.put(
 		) {
 			minAgeRestriction < 1 ||
 				(minAgeRestriction > 18 &&
-					errors.errorMessages.push({
+					errors.errorsMessages.push({
 						message: 'Invalid minAgeRegistrations',
 						field: 'minAgeRegistration',
 					}));
@@ -198,7 +198,7 @@ app.put(
 			minAgeRestriction = null;
 		}
 
-		if (errors.errorMessages.length) {
+		if (errors.errorsMessages.length) {
 			res.status(400).send(errors);
 			return;
 		}
