@@ -201,6 +201,16 @@ app.put(
 					}));
 		}
 
+		if (
+			typeof publicationDate !== 'undefined' &&
+			typeof publicationDate !== 'string'
+		) {
+					errors.errorsMessages.push({
+						message: 'Invalid publicationDate',
+						field: 'publicationDate',
+					});
+		}
+
 		if (errors.errorsMessages.length) {
 			res.status(400).send(errors);
 			return;
