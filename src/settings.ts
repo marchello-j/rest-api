@@ -121,7 +121,7 @@ app.post('/videos', (req: RequestWithBody<CreateVideoDto>, res: Response) => {
 	}
 
 	if (errors.errorMessages.length) {
-		res.status(400).send(errors);
+		res.status(400).json(errors);
 		return;
 	}
 
