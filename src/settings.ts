@@ -196,8 +196,8 @@ app.put(
 			minAgeRestriction < 1 ||
 				(minAgeRestriction > 18 &&
 					errors.errorsMessages.push({
-						message: 'Invalid minAgeRegistrations',
-						field: 'minAgeRegistration',
+						message: 'Invalid minAgeRestriction',
+						field: 'minAgeRestriction',
 					}));
 		}
 
