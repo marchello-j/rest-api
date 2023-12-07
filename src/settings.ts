@@ -187,12 +187,10 @@ app.put(
 				message: 'Invalid canBeDownloaded',
 				field: 'canBeDownloaded',
 			});
-		}else{
-			canBeDownloaded = false;
 		}
 
 		if (
-			typeof minAgeRestriction != 'undefined' &&
+			typeof minAgeRestriction !== 'undefined' &&
 			typeof minAgeRestriction === 'number'
 		) {
 			minAgeRestriction < 1 ||
@@ -201,8 +199,6 @@ app.put(
 						message: 'Invalid minAgeRegistrations',
 						field: 'minAgeRegistration',
 					}));
-		} else {
-			minAgeRestriction = null;
 		}
 
 		if (errors.errorsMessages.length) {
@@ -223,8 +219,8 @@ app.put(
 			...video,
 			title,
 			author,
-			canBeDownloaded,
-			minAgeRestriction,
+			canBeDownloaded: canBeDownloaded ? canBeDownloaded : video.canBeDownloaded,
+			minAgeRestriction: minAgeRestriction ? minAgeRestriction : video.minAgeRestriction,
 			availableResolutions,
 			publicationDate: publicationDate
 				? publicationDate
