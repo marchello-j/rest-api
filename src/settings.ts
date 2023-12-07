@@ -1,7 +1,8 @@
+import bodyParser from 'body-parser';
 import express, { Request, Response } from 'express';
 
 export const app = express();
-app.use(express.json());
+app.use(bodyParser.json());
 
 type RequestWithParams<P> = Request<P, {}, {}, {}>;
 type RequestWithBody<B> = Request<{}, {}, B, {}>;
@@ -121,7 +122,7 @@ app.post('/videos', (req: RequestWithBody<CreateVideoDto>, res: Response) => {
 	}
 
 	if (errors.errorMessages.length) {
-		res.status(400).json(errors);
+		res.status(400).send(errors);
 		return;
 	}
 
