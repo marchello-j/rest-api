@@ -70,7 +70,8 @@ let videos: VideoType[] = [
 ];
 
 app.delete('/testing/all-data', (req: Request, res: Response) => {
-	
+	videos.splice(0);
+	res.status(204);
 });
 
 app.get('/videos', (req: Request, res: Response): void => {
