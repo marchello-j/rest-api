@@ -1,4 +1,5 @@
 import bodyParser from 'body-parser';
+import e from 'express';
 import express, { Request, Response } from 'express';
 
 export const app = express();
@@ -110,14 +111,14 @@ app.post('/videos', (req: RequestWithBody<CreateVideoDto>, res: Response) => {
 		availableResolutions.map((r) => {
 			!AvailableResolutions.includes(r) &&
 				errors.errorsMessages.push({
-					message: 'Invalid availableResolution',
-					field: 'availableResolution',
+					message: 'Invalid availableResolutions',
+					field: 'availableResolutions',
 				});
 		});
 	} else {
 		errors.errorsMessages.push({
 			message: 'Incorrect type',
-			field: 'availableResolution',
+			field: 'availableResolutions',
 		});
 	}
 
@@ -173,17 +174,23 @@ app.put(
 			availableResolutions.map((r) => {
 				!AvailableResolutions.includes(r) &&
 					errors.errorsMessages.push({
-						message: 'Invalid availableResolution',
-						field: 'availableResolution',
+						message: 'Invalid availableResolutions',
+						field: 'availableResolutions',
 					});
 			});
 		} else {
 			availableResolutions = [];
 		}
 
-		if (typeof canBeDownloaded === 'undefined') {
+		if (typeof canBeDownloaded !== 'undefined' && typeof canBeDownloaded !== 'boolean') {
+			errors.errorsMessages.push({
+				message: 'Invalid canBeDownloaded',
+				field: 'canBeDownloaded',
+			});
+		}else{
 			canBeDownloaded = false;
 		}
+
 		if (
 			typeof minAgeRestriction != 'undefined' &&
 			typeof minAgeRestriction === 'number'
