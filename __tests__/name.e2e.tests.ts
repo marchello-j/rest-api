@@ -28,7 +28,7 @@ describe('/videos', () => {
 	it('- GET video by ID with incorrect id', async () => {
 		await request(app).get('/videos/12312123').expect(404);
 	});
-	it('+ GET product by ID with correct id', async () => {
+	it('+ GET video by ID with correct id', async () => {
 		await request(app).get('/videos/' + newVideo?.id);
 	});
 	it('- POST does not create the video with incorrect data (no title, no author)', async function () {

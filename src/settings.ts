@@ -1,9 +1,7 @@
-import bodyParser from 'body-parser';
-import e from 'express';
 import express, { Request, Response } from 'express';
 
 export const app = express();
-app.use(bodyParser.json());
+app.use(express.json());
 
 type RequestWithParams<P> = Request<P, {}, {}, {}>;
 type RequestWithBody<B> = Request<{}, {}, B, {}>;
@@ -167,7 +165,10 @@ app.put(
 			errors.errorsMessages.push({ message: 'Invalid title', field: 'title' });
 		}
 		if (!author || author.trim().length < 1 || author.trim().length > 20) {
-			errors.errorsMessages.push({ message: 'Invalid author', field: 'author' });
+			errors.errorsMessages.push({
+				message: 'Invalid author',
+				field: 'author',
+			});
 		}
 
 		if (Array.isArray(availableResolutions)) {
@@ -182,7 +183,10 @@ app.put(
 			availableResolutions = [];
 		}
 
-		if (typeof canBeDownloaded !== 'undefined' && typeof canBeDownloaded !== 'boolean') {
+		if (
+			typeof canBeDownloaded !== 'undefined' &&
+			typeof canBeDownloaded !== 'boolean'
+		) {
 			errors.errorsMessages.push({
 				message: 'Invalid canBeDownloaded',
 				field: 'canBeDownloaded',
@@ -205,10 +209,10 @@ app.put(
 			typeof publicationDate !== 'undefined' &&
 			typeof publicationDate !== 'string'
 		) {
-					errors.errorsMessages.push({
-						message: 'Invalid publicationDate',
-						field: 'publicationDate',
-					});
+			errors.errorsMessages.push({
+				message: 'Invalid publicationDate',
+				field: 'publicationDate',
+			});
 		}
 
 		if (errors.errorsMessages.length) {
@@ -229,8 +233,12 @@ app.put(
 			...video,
 			title,
 			author,
-			canBeDownloaded: canBeDownloaded ? canBeDownloaded : video.canBeDownloaded,
-			minAgeRestriction: minAgeRestriction ? minAgeRestriction : video.minAgeRestriction,
+			canBeDownloaded: canBeDownloaded
+				? canBeDownloaded
+				: video.canBeDownloaded,
+			minAgeRestriction: minAgeRestriction
+				? minAgeRestriction
+				: video.minAgeRestriction,
 			availableResolutions,
 			publicationDate: publicationDate
 				? publicationDate
