@@ -195,7 +195,7 @@ videoRoute.put(
 				: video.publicationDate,
 		};
 
-		db.videos.splice(videoIndex, 1);
+		db.videos.splice(videoIndex, 1, updatedItem);
 
 		res.sendStatus(204);
 	}

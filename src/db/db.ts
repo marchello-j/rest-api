@@ -1,4 +1,15 @@
-export const db = {
+import { DBType } from '../types/db/db';
+
+export const db: DBType = {
+	blogs: [
+		{
+			id: '1',
+			name: 'Marsel',
+			description: 'about my edication',
+			websiteUrl: 'www.myedication@gmail.com',
+		},
+	],
+	posts: [],
 	videos: [
 		{
 			id: 1,
