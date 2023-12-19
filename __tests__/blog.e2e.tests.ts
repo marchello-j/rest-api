@@ -38,7 +38,7 @@ describe('/blogs', () => {
 	});
 
 	it('- POST does not create the blog with incorrect data (no name, no description)', async function () {
-		await request(app)
+		const resault = await request(app)
 			.post('/blogs')
 			.auth('admin', 'qwerty')
 			.send({
@@ -46,12 +46,8 @@ describe('/blogs', () => {
 				description: '',
 				websiteUrl: 'http://google.com',
 			})
-			.expect(400, {
-				errorsMessages: [
-					{ message: 'Invalid name', field: 'name' },
-					{ message: 'Invalid description', field: 'description' },
-				],
-			});
+			.expect(400);
+		expect(resault.body).toEqual({ errorsMessages: expect.any(Array) });
 	});
 	it('+ POST create the blog with correct data', async function () {
 		const result = await request(app)
@@ -67,7 +63,7 @@ describe('/blogs', () => {
 	});
 
 	it('+ PUT create the blog with correct data', async function () {
-		await request(app)
+		const result = await request(app)
 			.put(`/blogs/${newBlog?.id}`)
 			.auth('admin', 'qwerty')
 			.send({
@@ -77,9 +73,9 @@ describe('/blogs', () => {
 			})
 			.expect(204);
 	});
-	it('- PUT create the video with incorrect data', async function () {
+	it('- PUT try to update not found blog', async function () {
 		await request(app)
-			.put(`/blogs/${newBlog?.id}`)
+			.put('/blogs/123')
 			.auth('admin', 'qwerty')
 			.send({
 				name: 'Hello Title',

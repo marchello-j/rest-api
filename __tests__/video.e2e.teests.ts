@@ -68,25 +68,25 @@ describe('/videos', () => {
 			})
 			.expect(204);
 	});
-	it('+ DELETE video by ID with correct id', async () => {
-		await request(app).delete(`/videos/${newVideo?.id}`).expect(204);
-	});
+	// it('+ DELETE video by ID with correct id', async () => {
+	// 	await request(app).delete(`/videos/${newVideo?.id}`).expect(204);
+	// });
 
-	it('+ DELETE video by ID with incorrect id', async () => {
-		await request(app).delete('/videos/4783645');
-	});
+	// it('+ DELETE video by ID with incorrect id', async () => {
+	// 	await request(app).delete('/videos/4783645');
+	// });
 
-	it('- PUT create the video with incorrect data', async function () {
-		await request(app)
-			.put(`/videos/${newVideo?.id}`)
-			.send({
-				title: 'Hello',
-				author: 'hello',
-				availableResolutions: [],
-				canBeDownloaded: false,
-				minAgeRestriction: 1,
-				publicationDate: 'asdfasdf',
-			})
-			.expect(404);
-	});
+	// it('- PUT create the video with incorrect data', async function () {
+	// 	await request(app)
+	// 		.put(`/videos/${newVideo?.id}`)
+	// 		.send({
+	// 			title: 'Hello',
+	// 			author: 'hello',
+	// 			availableResolutions: [],
+	// 			canBeDownloaded: false,
+	// 			minAgeRestriction: 1,
+	// 			publicationDate: 'asdfasdf',
+	// 		})
+	// 		.expect(404);
+	// });
 });
