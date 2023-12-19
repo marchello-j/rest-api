@@ -3,7 +3,7 @@ import { app } from '../src/settings';
 import dotenv from 'dotenv';
 dotenv.config();
 
-import { VideoType } from '../src/settings';
+import { VideoType } from '../src/types/video/output';
 
 describe('/videos', () => {
 	let newVideo: VideoType | null = null;
@@ -36,7 +36,7 @@ describe('/videos', () => {
 			.post('/videos')
 			.send({ title: '', author: '', availableResolutions: ['P144'] })
 			.expect(400, {
-				errorMessages: [
+				errorsMessages: [
 					{ message: 'Invalid title', field: 'title' },
 					{ message: 'Invalid author', field: 'author' },
 				],
@@ -76,16 +76,16 @@ describe('/videos', () => {
 		await request(app).delete('/videos/4783645');
 	});
 
-	it('+ PUT create the video with correct data', async function () {
+	it('- PUT create the video with incorrect data', async function () {
 		await request(app)
 			.put(`/videos/${newVideo?.id}`)
 			.send({
-				title: 'Hello Title',
-				author: 'Hello Author',
-				availableResolutions: ['P144'],
+				title: 'Hello',
+				author: 'hello',
+				availableResolutions: [],
 				canBeDownloaded: false,
 				minAgeRestriction: 1,
-				publicationDate: '2023-12-05T08:47:22.152Z',
+				publicationDate: 'asdfasdf',
 			})
 			.expect(404);
 	});

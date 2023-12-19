@@ -1995,6 +1995,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"express-validator@npm:^7.0.1":
+  version: 7.0.1
+  resolution: "express-validator@npm:7.0.1"
+  dependencies:
+    lodash: "npm:^4.17.21"
+    validator: "npm:^13.9.0"
+  checksum: c65591561903ad7b370fdf61a789620b50f5b0d912872cfc07d71ecd654bc077b4918a4a5e9c3777c6d48bbcc702f114ab23c9dfc145a4a79e5245854cada532
+  languageName: node
+  linkType: hard
+
 "express@npm:^4.18.2":
   version: 4.18.2
   resolution: "express@npm:4.18.2"
@@ -3167,6 +3177,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lodash@npm:^4.17.21":
+  version: 4.17.21
+  resolution: "lodash@npm:4.17.21"
+  checksum: c08619c038846ea6ac754abd6dd29d2568aa705feb69339e836dfa8d8b09abbb2f859371e86863eda41848221f9af43714491467b5b0299122431e202bb0c532
+  languageName: node
+  linkType: hard
+
 "lru-cache@npm:^10.0.1, lru-cache@npm:^9.1.1 || ^10.0.0":
   version: 10.1.0
   resolution: "lru-cache@npm:10.1.0"
@@ -3919,6 +3936,7 @@ __metadata:
     body-parser: "npm:^1.20.2"
     dotenv: "npm:^16.3.1"
     express: "npm:^4.18.2"
+    express-validator: "npm:^7.0.1"
     jest: "npm:^29.7.0"
     nodemon: "npm:^3.0.2"
     supertest: "npm:^6.3.3"
@@ -4551,6 +4569,13 @@ __metadata:
     "@types/istanbul-lib-coverage": "npm:^2.0.1"
     convert-source-map: "npm:^2.0.0"
   checksum: 18dd8cebfb6790f27f4e41e7cff77c7ab1c8904085f354dd7875e2eb65f4261c4cf40939132502875779d92304bfea46b8336346ecb40b6f33c3a3979e6f5729
+  languageName: node
+  linkType: hard
+
+"validator@npm:^13.9.0":
+  version: 13.11.0
+  resolution: "validator@npm:13.11.0"
+  checksum: 4bf094641eb71729c06a42d669840e7189597ba655a8264adabac9bf03f95cd6fde5fbc894b0a13ee861bd4a852f56d2afdc9391aeaeb3fc0f9633a974140e12
   languageName: node
   linkType: hard
 
