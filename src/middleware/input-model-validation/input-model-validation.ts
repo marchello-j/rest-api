@@ -27,7 +27,7 @@ export const inputValidation = (
 	if (!formattedError.isEmpty()) {
 		const errorMessage = formattedError.array({ onlyFirstError: true });
 		const errors = {
-			errorMessages: errorMessage,
+			errorsMessages: errorMessage,
 		};
 		res.status(400).send(errors);
 		return;
