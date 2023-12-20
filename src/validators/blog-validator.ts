@@ -17,7 +17,7 @@ const websiteUrlValidation = body('websiteUrl')
 	.trim()
 	.isLength({ min: 1, max: 100 })
 	.withMessage('Incorrect lenght must be min 1 max 100 symbol')
-	.matches('[a-zA-Z0-9_-]+.)+[a-zA-Z0-9_-]+(/[a-zA-Z0-9_-]+)*/?$')
+	.matches('^https://([a-zA-Z0-9_-]+.)+[a-zA-Z0-9_-]+(/[a-zA-Z0-9_-]+)*/?$')
 	.withMessage('Inncorrect website url');
 
 export const blogValidation = () => [

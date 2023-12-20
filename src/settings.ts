@@ -15,6 +15,5 @@ app.delete('/testing/all-data', (req: Request, res: Response) => {
 	db.blogs.length = 0;
 	db.posts.length = 0;
 	db.videos.length = 0;
-  //asdfa;skdfja
 	res.sendStatus(204);
 });
