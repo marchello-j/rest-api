@@ -10,7 +10,7 @@ app.use(express.json());
 app.get('/env', (req, res) => {
 	res.send({
 		login: process.env.AUTH_LOGIN,
-		pass: process.env.AUTH_PASSWORD,
+		password: process.env.AUTH_PASSWORD,
 	});
 });
 app.use('/videos', videoRoute);
