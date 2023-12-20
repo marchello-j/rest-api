@@ -7,7 +7,12 @@ import { db } from './db/db';
 
 export const app = express();
 app.use(express.json());
-
+app.get('/env', (req, res) => {
+	res.send({
+		login: process.env.AUTH_LOGIN,
+		pass: process.env.AUTH_PASSWORD,
+	});
+});
 app.use('/videos', videoRoute);
 app.use('/blogs', blogRoute);
 app.use('/posts', postRoute);
