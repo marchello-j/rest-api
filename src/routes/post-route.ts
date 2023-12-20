@@ -39,6 +39,9 @@ postRoute.post(
 		const newPost = req.body;
 
 		const post = PostRepository.createPost(newPost);
+		if (!post) {
+			return res.sendStatus(400);
+		}
 		return res.status(201).send(post);
 	}
 );

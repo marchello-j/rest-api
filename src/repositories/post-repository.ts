@@ -2,6 +2,7 @@ import { randomUUID } from 'crypto';
 import { db } from '../db/db';
 import { CreatePostModel, UpdatePostModel } from '../types/post/input';
 import { PostModel } from '../types/post/output';
+import { BlogRepository } from './blog-repository';
 
 export class PostRepository {
 	static getAllPosts() {
@@ -10,14 +11,18 @@ export class PostRepository {
 	static getPostById(id: string) {
 		return db.posts.find((b) => b.id === id);
 	}
-	static createPost(body: CreatePostModel): PostModel {
+	static createPost(body: CreatePostModel): PostModel | null {
+		const blog = BlogRepository.getBlogById(body.blogId);
+		if (!blog) {
+			return null;
+		}
 		const newPost = {
 			id: randomUUID(),
 			title: body.title,
 			shortDescription: body.shortDescription,
 			content: body.content,
 			blogId: body.blogId,
-			blogName: randomUUID(),
+			blogName: blog?.name,
 		};
 		db.posts.push(newPost);
 		return newPost;
