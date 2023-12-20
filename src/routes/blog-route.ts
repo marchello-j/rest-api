@@ -17,14 +17,17 @@ blogRoute.get('/', (req: Request, res: Response<BlogModel[]>) => {
 	return res.send(blogs);
 });
 
-blogRoute.get('/:id', (req: RequestWithParams<Params>, res: Response<null | BlogModel>) => {
-	const id = req.params.id;
-	const blog = BlogRepository.getBlogById(id);
-	if (!blog) {
-	return	res.sendStatus(404);
+blogRoute.get(
+	'/:id',
+	(req: RequestWithParams<Params>, res: Response<null | BlogModel>) => {
+		const id = req.params.id;
+		const blog = BlogRepository.getBlogById(id);
+		if (!blog) {
+			return res.sendStatus(404);
+		}
+		return res.status(200).send(blog);
 	}
-	return res.status(200).send(blog);
-});
+);
 
 blogRoute.post(
 	'/',
@@ -41,7 +44,10 @@ blogRoute.put(
 	'/:id',
 	authMiddleware,
 	blogValidation(),
-	(req: RequestWithBodyAndParams<Params, UpdateBlogModel>, res: Response<void>): void => {
+	(
+		req: RequestWithBodyAndParams<Params, UpdateBlogModel>,
+		res: Response<void>
+	): void => {
 		const id = req.params.id;
 		const resault = BlogRepository.updateBlog(id, req.body);
 		if (!resault) {
@@ -58,9 +64,9 @@ blogRoute.delete(
 	(req: RequestWithParams<Params>, res: Response<void>): void => {
 		const isDeleted = BlogRepository.deleteBlog(req.params.id);
 		if (isDeleted) {
-			 res.sendStatus(204);
-			 return;
-		}		
+			res.sendStatus(204);
+			return;
+		}
 		res.sendStatus(404);
 		return;
 	}

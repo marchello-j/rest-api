@@ -46,7 +46,7 @@ postRoute.post(
 postRoute.put(
 	'/:id',
 	authMiddleware,
-	postValidation,
+	postValidation(),
 	(
 		req: RequestWithBodyAndParams<Params, UpdatePostModel>,
 		res: Response<void>

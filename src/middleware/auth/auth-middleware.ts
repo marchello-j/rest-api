@@ -1,4 +1,4 @@
-import dotenv from 'dotenv'
+import dotenv from 'dotenv';
 import { NextFunction, Request, Response } from 'express';
 
 dotenv.config();
@@ -8,11 +8,11 @@ export const authMiddleware = (
 	res: Response,
 	next: NextFunction
 ) => {
-	if (req.headers['authorization'] !== 'Basic YWRtaW46cXdlcnR5') {
-		res.sendStatus(401);
-		return;
-	}
-	next();
+	// if (req.headers['authorization'] !== 'Basic YWRtaW46cXdlcnR5') {
+	// 	res.sendStatus(401);
+	// 	return;
+	// }
+	// next();
 
 	const auth = req.headers['authorization'];
 
@@ -26,16 +26,19 @@ export const authMiddleware = (
 	if (basic !== 'Basic') {
 		res.sendStatus(401);
 		return;
-	} 
+	}
 
 	const decoded = Buffer.from(token, 'base64').toString();
 
 	const [login, password] = decoded.split(':');
 
-  if(login !== process.env.AUTH_LOGiN || password !== process.env.AUTH_PASSWORD) {
-    res.sendStatus(401)
-    return
-  }
+	if (
+		login !== process.env.AUTH_LOGiN ||
+		password !== process.env.AUTH_PASSWORD
+	) {
+		res.sendStatus(401);
+		return;
+	}
 
-  return next();
+	return next();
 };

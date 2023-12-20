@@ -9,7 +9,16 @@ export const db: DBType = {
 			websiteUrl: 'www.myedication@gmail.com',
 		},
 	],
-	posts: [],
+	posts: [
+		{
+			id: '1',
+			title: 'About me',
+			shortDescription: 'asfd; fasdf; ;jfasjdfad ;jewiurpq ;k ;jdfas',
+			content: 'dsa ;kj;asdjf a;dkfj a;kadf ;kla',
+			blogId: '1',
+			blogName: 'asdfad dsafadf',
+		},
+	],
 	videos: [
 		{
 			id: 1,
