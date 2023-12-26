@@ -1,6 +1,7 @@
 import { body } from 'express-validator';
 import { inputValidation } from '../middleware/input-model-validation/input-model-validation';
 import { PostRepository } from '../repositories/post-repository';
+import { BlogRepository } from '../repositories/blog-repository';
 
 const titleValidation = body('title')
 	.isString()
@@ -8,7 +9,7 @@ const titleValidation = body('title')
 	.isLength({ min: 1, max: 30 })
 	.withMessage('Incorrect title');
 
-const shortDescriptionValidation = body('title')
+const shortDescriptionValidation = body('shortDescription')
 	.isString()
 	.trim()
 	.isLength({ min: 1, max: 100 })
@@ -24,8 +25,7 @@ const blogValidation = body('blogId')
 	.isString()
 	.trim()
 	.custom((value) => {
-		const blog = PostRepository.getPostById(value);
-
+		const blog = BlogRepository.getBlogById(value);
 		if (!blog) {
 			throw Error('Incorrect blogId');
 		}

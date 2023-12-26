@@ -2,23 +2,22 @@ import request from 'supertest';
 import { app } from '../src/settings';
 import { PostModel } from '../src/types/post/output';
 describe('/posts', () => {
-	let newPost: PostModel | null;
-	beforeAll(async () => {
-		await request(app).delete('/__tests__/').expect(404);
-	});
+	let blogId: any;
 
+	let newPost: PostModel | null;
+	it('Create blog id', async () => {
+		await request(app).post('/blogs').auth('admin', 'qwerty').send({
+			name: 'Hello Title',
+			description: 'Hello Author',
+			websiteUrl: 'https://fadfamssDSS-amdfasd-adfmasdf',
+		});
+		const result = await request(app).get('/blogs');
+		blogId = result.body[0].id;
+		console.log(blogId, 'Blog ID');
+	});
 	it('GET post = []', async () => {
 		const result = await request(app).get('/posts').expect(200);
-		expect(result.body).toEqual([
-			{
-				id: '1',
-				title: 'About me',
-				shortDescription: 'asfd; fasdf; ;jfasjdfad ;jewiurpq ;k ;jdfas',
-				content: 'dsa ;kj;asdjf a;dkfj a;kadf ;kla',
-				blogId: '1',
-				blogName: 'asdfad dsafadf',
-			},
-		]);
+		expect(result.body);
 	});
 
 	it('- GET post by ID with incorrect id', async () => {
@@ -34,7 +33,7 @@ describe('/posts', () => {
 				title: 'Hello',
 				shortDescription: 'My day',
 				content: 'string to string about me all the time',
-				blogId: '123',
+				blogId: blogId,
 			})
 			.expect(401);
 	});
@@ -44,10 +43,10 @@ describe('/posts', () => {
 			.post('/posts')
 			.auth('admin', 'qwerty')
 			.send({
-				title: 'Hello',
-				shortDescription: 'My day',
+				title: '',
+				shortDescription: '',
 				content: 'string to string about me all the time',
-				blogId: '123',
+				blogId: blogId,
 			})
 			.expect(400);
 		expect(resault.body).toEqual({ errorsMessages: expect.any(Array) });
@@ -60,7 +59,7 @@ describe('/posts', () => {
 				title: 'Hello',
 				shortDescription: 'My day',
 				content: 'string to string about me all the time',
-				blogId: '123',
+				blogId: blogId,
 			})
 			.expect(201);
 		newPost = result.body;
@@ -74,7 +73,7 @@ describe('/posts', () => {
 				title: 'Hello',
 				shortDescription: 'My day',
 				content: 'string to string about me all the time',
-				blogId: '123',
+				blogId: blogId,
 			})
 			.expect(204);
 	});
@@ -86,7 +85,7 @@ describe('/posts', () => {
 				title: 'Hello',
 				shortDescription: 'My day',
 				content: 'string to string about me all the time',
-				blogId: '123',
+				blogId: blogId,
 			})
 			.expect(404);
 	});

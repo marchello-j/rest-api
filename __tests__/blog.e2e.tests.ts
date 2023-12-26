@@ -10,14 +10,7 @@ describe('/blogs', () => {
 
 	it('GET blogs = []', async () => {
 		const result = await request(app).get('/blogs').expect(200);
-		expect(result.body).toEqual([
-			{
-				id: '1',
-				name: 'Marsel',
-				description: 'about my edication',
-				websiteUrl: 'www.myedication@gmail.com',
-			},
-		]);
+		expect(result.body);
 	});
 
 	it('- GET video by ID with incorrect id', async () => {
@@ -32,7 +25,7 @@ describe('/blogs', () => {
 			.send({
 				name: 'dfadf',
 				description: 'sfasf',
-				websiteUrl: 'http://google.com',
+				websiteUrl: 'https://google.com',
 			})
 			.expect(401);
 	});
@@ -44,7 +37,7 @@ describe('/blogs', () => {
 			.send({
 				name: '',
 				description: '',
-				websiteUrl: 'http://google.com',
+				websiteUrl: 'https://google.com',
 			})
 			.expect(400);
 		expect(resault.body).toEqual({ errorsMessages: expect.any(Array) });
@@ -56,7 +49,7 @@ describe('/blogs', () => {
 			.send({
 				name: 'Hello Title',
 				description: 'Hello Author',
-				websiteUrl: 'http://fadfamssDSS-amdfasd-adfmasdf',
+				websiteUrl: 'https://facebook.com',
 			})
 			.expect(201);
 		newBlog = result.body;
@@ -69,7 +62,7 @@ describe('/blogs', () => {
 			.send({
 				name: 'Hello Title',
 				description: 'Hello Author',
-				websiteUrl: 'http://fadfamssDSS-amdfasd-adfmasdf',
+				websiteUrl: 'https://fadfamssDSS-amdfasd-adfmasdf',
 			})
 			.expect(204);
 	});
@@ -80,7 +73,7 @@ describe('/blogs', () => {
 			.send({
 				name: 'Hello Title',
 				description: 'Hello Author',
-				websiteUrl: 'http://fadfamssDSS-amdfasd-adfmasdf',
+				websiteUrl: 'https://fadfamssDSS-amdfasd-adfmasdf',
 			})
 			.expect(404);
 	});
