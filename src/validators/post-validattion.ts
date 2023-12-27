@@ -24,8 +24,8 @@ const contentValidation = body('content')
 const blogValidation = body('blogId')
 	.isString()
 	.trim()
-	.custom((value) => {
-		const blog = BlogRepository.getBlogById(value);
+	.custom(async (value) => {
+		const blog = await BlogRepository.getBlogById(value);
 		if (!blog) {
 			throw Error('Incorrect blogId');
 		}

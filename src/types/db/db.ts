@@ -7,3 +7,17 @@ export type DBType = {
 	posts: PostModel[];
 	videos: VideoType[];
 };
+
+export type BlogDBType = {
+	name: string;
+	description: string;
+	websiteUrl: string;
+};
+
+export type PostDBType = {
+	title: string;
+	shortDescription: string;
+	content: string;
+	blogId: string;
+	blogName: string;
+};

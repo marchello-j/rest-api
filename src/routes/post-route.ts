@@ -11,19 +11,24 @@ import { authMiddleware } from '../middleware/auth/auth-middleware';
 import { postValidation } from '../validators/post-validattion';
 import { CreateBlogModel } from '../types/blog/input';
 import { CreatePostModel, UpdatePostModel } from '../types/post/input';
+import { ObjectId } from 'mongodb';
 
 export const postRoute = Router();
 
-postRoute.get('/', (req: Request, res: Response) => {
-	const posts = PostRepository.getAllPosts();
+postRoute.get('/', async (req: Request, res: Response) => {
+	const posts = await PostRepository.getAllPosts();
 	res.send(posts);
 });
 
 postRoute.get(
 	'/:id',
-	(req: RequestWithParams<Params>, res: Response<null | PostModel>) => {
+	async (req: RequestWithParams<Params>, res: Response<null | PostModel>) => {
 		const id = req.params.id;
-		const post = PostRepository.getPostById(id);
+
+		if (!ObjectId.isValid(id)) {
+			res.sendStatus(404);
+		}
+		const post = await PostRepository.getPostById(id);
 		if (!post) {
 			return res.sendStatus(404);
 		}
@@ -35,10 +40,12 @@ postRoute.post(
 	'/',
 	authMiddleware,
 	postValidation(),
-	(req: RequestWithBody<CreatePostModel>, res: Response<PostModel>) => {
+	async (req: RequestWithBody<CreatePostModel>, res: Response<PostModel>) => {
+		if (!ObjectId.isValid(req.body.blogId)) {
+			res.sendStatus(404);
+		}
 		const newPost = req.body;
-
-		const post = PostRepository.createPost(newPost);
+		const post = await PostRepository.createPost(newPost);
 		if (!post) {
 			return res.sendStatus(400);
 		}
@@ -50,12 +57,16 @@ postRoute.put(
 	'/:id',
 	authMiddleware,
 	postValidation(),
-	(
+	async (
 		req: RequestWithBodyAndParams<Params, UpdatePostModel>,
 		res: Response<void>
-	): void => {
+	) => {
 		const id = req.params.id;
-		const resault = PostRepository.updatePost(id, req.body);
+
+		if (!ObjectId.isValid(id)) {
+			res.sendStatus(404);
+		}
+		const resault = await PostRepository.updatePost(id, req.body);
 		if (!resault) {
 			res.sendStatus(404);
 			return;
@@ -67,8 +78,11 @@ postRoute.put(
 postRoute.delete(
 	'/:id',
 	authMiddleware,
-	(req: RequestWithParams<Params>, res: Response<void>): void => {
-		const isDeleted = PostRepository.deletePost(req.params.id);
+	async (req: RequestWithParams<Params>, res: Response<void>) => {
+		if (!ObjectId.isValid(req.params.id)) {
+			res.sendStatus(404);
+		}
+		const isDeleted = await PostRepository.deletePost(req.params.id);
 		if (isDeleted) {
 			res.sendStatus(204);
 			return;

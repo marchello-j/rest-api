@@ -1,53 +1,61 @@
 import { randomUUID } from 'crypto';
-import { db } from '../db/db';
+
 import { CreatePostModel, UpdatePostModel } from '../types/post/input';
 import { PostModel } from '../types/post/output';
 import { BlogRepository } from './blog-repository';
+import { postCollection } from '../db/db';
+import { postMapper } from '../types/post/mappers';
+import { ObjectId } from 'mongodb';
 
 export class PostRepository {
-	static getAllPosts() {
-		return db.posts;
+	static async getAllPosts(): Promise<PostModel[]> {
+		const posts = await postCollection.find({}).toArray();
+		return posts.map(postMapper);
 	}
-	static getPostById(id: string) {
-		return db.posts.find((b) => b.id === id);
+	static async getPostById(id: string): Promise<PostModel | null> {
+		const post = await postCollection.findOne({ _id: new ObjectId(id) });
+		if (!post) {
+			return null;
+		}
+		return postMapper(post);
 	}
-	static createPost(body: CreatePostModel): PostModel | null {
-		const blog = BlogRepository.getBlogById(body.blogId);
+	static async createPost(
+		createData: CreatePostModel
+	): Promise<PostModel | null> {
+		const blog = await BlogRepository.getBlogById(createData.blogId);
 		if (!blog) {
 			return null;
 		}
 		const newPost = {
-			id: randomUUID(),
-			title: body.title,
-			shortDescription: body.shortDescription,
-			content: body.content,
-			blogId: body.blogId,
-			blogName: blog?.name,
+			title: createData.title,
+			shortDescription: createData.shortDescription,
+			content: createData.content,
+			blogId: blog.id,
+			blogName: blog.name,
+			createdAt: new Date().toISOString(),
 		};
-		db.posts.push(newPost);
-		return newPost;
+		const addNewPost = await postCollection.insertOne(newPost);
+		return {
+			...newPost,
+			id: addNewPost.insertedId.toString(),
+		};
 	}
-
-	static updatePost(id: string, body: UpdatePostModel) {
-		const post = db.posts.find((p) => p.id === id);
-		if (!post) {
-			return false;
-		}
-		post.title = body.title;
-		post.shortDescription = body.shortDescription;
-		post.content = body.content;
-		post.blogId = body.blogId;
-
-		return true;
-	}
-
-	static deletePost(id: string) {
-		for (let i = 0; i < db.posts.length; i++) {
-			if (db.posts[i].id === id) {
-				db.posts.splice(i, 1);
-				return true;
+	static async updatePost(id: string, body: UpdatePostModel): Promise<boolean> {
+		const updateResult = await postCollection.updateOne(
+			{ _id: new ObjectId(id) },
+			{
+				$set: {
+					title: body.title,
+					shortDescription: body.shortDescription,
+					content: body.content,
+					blogId: body.blogId,
+				},
 			}
-		}
-		return false;
+		);
+		return !!updateResult.matchedCount;
+	}
+	static async deletePost(id: string) {
+		const resDelete = await postCollection.deleteOne({ _id: new ObjectId(id) });
+		return !!resDelete.deletedCount;
 	}
 }
