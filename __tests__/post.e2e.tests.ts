@@ -9,7 +9,6 @@ describe('/posts', () => {
 	const client = new MongoClient(url);
 	beforeAll(async () => {
 		await client.connect();
-		await request(app).delete('/__tests__/').expect(404);
 	});
 
 	afterAll(async () => {

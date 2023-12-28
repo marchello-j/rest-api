@@ -7,12 +7,10 @@ dotenv.config();
 
 const url = process.env.MONGO_URL || 'mongodb://localhost:27017';
 describe('/blogs', () => {
-	
 	const client = new MongoClient(url);
 	let newBlog: BlogModel | null;
 	beforeAll(async () => {
 		await client.connect();
-		await request(app).delete('/__tests__/').expect(404);
 	});
 
 	afterAll(async () => {
