@@ -1,11 +1,22 @@
 import request from 'supertest';
 import { app } from '../src/settings';
 import { BlogModel } from '../src/types/blog/output';
+import { MongoClient } from 'mongodb';
+import dotenv from 'dotenv';
+dotenv.config();
 
+const url = process.env.MONGO_URL || 'mongodb://localhost:27017';
 describe('/blogs', () => {
+	
+	const client = new MongoClient(url);
 	let newBlog: BlogModel | null;
 	beforeAll(async () => {
+		await client.connect();
 		await request(app).delete('/__tests__/').expect(404);
+	});
+
+	afterAll(async () => {
+		await client.close();
 	});
 
 	it('GET blogs = []', async () => {

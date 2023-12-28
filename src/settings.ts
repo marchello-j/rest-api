@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 
-import { videoRoute } from './routes/video-route';
+// import { videoRoute } from './routes/video-route';
 import { blogRoute } from './routes/blog-route';
 import { postRoute } from './routes/post-route';
 import { deleteAllDataRoute } from './routes/testing-route';

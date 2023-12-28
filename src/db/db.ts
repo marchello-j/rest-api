@@ -2,10 +2,7 @@ import { MongoClient } from 'mongodb';
 import { BlogDBType, DBType, PostDBType } from '../types/db/db';
 
 const port: number = 80;
-const url =
-	process.env.MONGO_URL ||
-	'mongodb+srv://admin:admin@cluster0.kyo8kdt.mongodb.net/hw' ||
-	'mongodb://localhost:27017';
+const url = process.env.MONGO_URL || 'mongodb://localhost:27017';
 
 const client: MongoClient = new MongoClient(url);
 
