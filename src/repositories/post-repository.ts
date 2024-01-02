@@ -34,7 +34,7 @@ export class PostRepository {
 			blogName: blog.name,
 			createdAt: new Date().toISOString(),
 		};
-		const addNewPost = await postCollection.insertOne(newPost);
+		const addNewPost = await postCollection.insertOne({...newPost});
 		return {
 			...newPost,
 			id: addNewPost.insertedId.toString(),

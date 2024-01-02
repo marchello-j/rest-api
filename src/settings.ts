@@ -8,6 +8,6 @@ import { deleteAllDataRoute } from './routes/testing-route';
 export const app = express();
 app.use(express.json());
 
-app.delete('/testing/all-data', deleteAllDataRoute);
+app.use('/testing/all-data', deleteAllDataRoute);
 app.use('/blogs', blogRoute);
 app.use('/posts', postRoute);

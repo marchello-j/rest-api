@@ -33,7 +33,7 @@ export const authMiddleware = (
 	const [login, password] = decoded.split(':');
 
 	if (
-		login !== process.env.AUTH_LOGiN ||
+		login !== process.env.AUTH_LOGIN ||
 		password !== process.env.AUTH_PASSWORD
 	) {
 		res.sendStatus(401);

@@ -52,7 +52,7 @@ describe('/posts', () => {
 	it('- POST does not create the post with incorrect data (no title, no shortDescription)', async function () {
 		const resault = await request(app)
 			.post('/posts')
-			.auth('admin', 'admin')
+			.auth('admin', 'qwerty')
 			.send({
 				title: '',
 				shortDescription: '',
@@ -65,7 +65,7 @@ describe('/posts', () => {
 	it('+ POST create the post with correct data', async function () {
 		const result = await request(app)
 			.post('/posts')
-			.auth('admin', 'admin')
+			.auth('admin', 'qwerty')
 			.send({
 				title: 'Hello',
 				shortDescription: 'My day',
@@ -82,7 +82,7 @@ describe('/posts', () => {
 	it('+ PUT create the post with correct data', async function () {
 		const result = await request(app)
 			.put(`/posts/${newPost?.id}`)
-			.auth('admin', 'admin')
+			.auth('admin', 'qwerty')
 			.send({
 				title: 'Hello',
 				shortDescription: 'My day',
@@ -94,7 +94,7 @@ describe('/posts', () => {
 	it('- PUT try to update not found post', async function () {
 		await request(app)
 			.put('/posts/123456789112345678911234')
-			.auth('admin', 'admin')
+			.auth('admin', 'qwerty')
 			.send({
 				title: 'Hello',
 				shortDescription: 'My day',
@@ -106,7 +106,7 @@ describe('/posts', () => {
 	it('+ DELETE post by ID with correct id', async () => {
 		await request(app)
 			.delete(`/posts/${newPost?.id}`)
-			.auth('admin', 'admin')
+			.auth('admin', 'qwerty')
 			.expect(204);
 	});
 

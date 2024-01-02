@@ -37,7 +37,7 @@ describe('/blogs', () => {
 	it('- POST does not create the blog with incorrect data (no name, no description)', async function () {
 		const resault = await request(app)
 			.post('/blogs')
-			.auth('admin', 'admin')
+			.auth('admin', 'qwerty')
 			.send({
 				name: '',
 				description: '',
@@ -49,7 +49,7 @@ describe('/blogs', () => {
 	it('+ POST create the blog with correct data', async function () {
 		const result = await request(app)
 			.post('/blogs')
-			.auth('admin', 'admin')
+			.auth('admin', 'qwerty')
 			.send({
 				name: 'Hello Title',
 				description: 'Hello Author',
@@ -69,14 +69,14 @@ describe('/blogs', () => {
 	it('+ DELETE blog by ID with correct id', async () => {
 		await request(app)
 			.delete(`/blogs/${newBlog?.id}`)
-			.auth('admin', 'admin')
+			.auth('admin', 'qwerty')
 			.expect(204);
 	});
 
 	it('+ PUT create the blog with correct data', async function () {
 		const result = await request(app)
 			.put(`/blogs/${newBlog?.id}`)
-			.auth('admin', 'admin')
+			.auth('admin', 'qwerty')
 			.send({
 				name: 'Hello Title',
 				description: 'Hello Author',
@@ -88,7 +88,7 @@ describe('/blogs', () => {
 	it('- PUT try to update not found blog', async function () {
 		await request(app)
 			.put('/blogs/1234567891011121324825')
-			.auth('admin', 'admin')
+			.auth('admin', 'qwerty')
 			.send({
 				name: 'Hello Title',
 				description: 'Hello Author',
@@ -100,6 +100,6 @@ describe('/blogs', () => {
 	it('- DELETE blog by ID with incorrect id', async () => {
 		await request(app)
 			.delete('/blogs/478364578945612332145698')
-			.auth('admin', 'admin');
+			.auth('admin', 'qwerty');
 	});
 });

@@ -49,16 +49,22 @@ blogRoute.put(
 	'/:id',
 	authMiddleware,
 	blogValidation(),
-	(
+	async (
 		req: RequestWithBodyAndParams<Params, UpdateBlogModel>,
 		res: Response<void>
-	): void => {
+	) => {
 		const id = req.params.id;
 		if (!ObjectId.isValid(id)) {
 			res.sendStatus(404);
 			return;
 		}
-		const resault = BlogRepository.updateBlog(id, req.body);
+
+		const blog = await BlogRepository.getBlogById(id);
+		if (!blog) {
+			res.sendStatus(404);
+			return;
+		}
+		const resault = await BlogRepository.updateBlog(id, req.body);
 		if (!resault) {
 			res.sendStatus(404);
 			return;
@@ -75,6 +81,10 @@ blogRoute.delete(
 		if (!ObjectId.isValid(id)) {
 			res.sendStatus(404);
 			return;
+		}
+		const blog = await BlogRepository.getBlogById(id);
+		if (!blog) {
+			return res.sendStatus(404);
 		}
 		await BlogRepository.deleteBlog(id);
 		res.sendStatus(204);

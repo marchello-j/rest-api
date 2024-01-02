@@ -21,7 +21,6 @@ export class BlogRepository {
 	}
 
 	static async createBlog(createData: CreateBlogModel): Promise<BlogModel> {
-		const blog = await blogCollection.insertOne(createData);
 		const newBlog = {
 			name: createData.name,
 			description: createData.description,
@@ -29,6 +28,7 @@ export class BlogRepository {
 			createdAt: new Date().toISOString(),
 			isMembership: false,
 		};
+		const blog = await blogCollection.insertOne({ ...newBlog });
 		return {
 			...newBlog,
 			id: blog.insertedId.toString(),
@@ -39,7 +39,7 @@ export class BlogRepository {
 		id: string,
 		updateBlog: UpdateBlogModel
 	): Promise<boolean> {
-		if(!ObjectId.isValid(id)) return false
+		if (!ObjectId.isValid(id)) return false;
 		const blog = await blogCollection.updateOne(
 			{ _id: new ObjectId(id) },
 			{
