@@ -3,6 +3,6 @@ import { app } from './settings';
 
 const port = 80;
 
-app.listen(port, (): void => {
-	runDB();
+app.listen(port, async () => {
+	await runDB();
 });

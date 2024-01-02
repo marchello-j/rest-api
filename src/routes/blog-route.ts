@@ -8,8 +8,8 @@ import {
 import { Params } from '../types/common';
 import { authMiddleware } from '../middleware/auth/auth-middleware';
 import { blogValidation } from '../validators/blog-validator';
-import { CreateBlogModel, UpdateBlogModel } from '../types/blog/input';
-import { BlogModel } from '../types/blog/output';
+import { CreateBlogModel, UpdateBlogModel } from '../types/blogs/input';
+import { BlogModel } from '../types/blogs/output';
 import { ObjectId } from 'mongodb';
 
 export const blogRoute = Router();
@@ -24,7 +24,7 @@ blogRoute.get(
 	async (req: RequestWithParams<Params>, res: Response<null | BlogModel>) => {
 		const id = req.params.id;
 		if (!ObjectId.isValid(id)) {
-			res.sendStatus(404);
+			return res.sendStatus(404);
 		}
 		const blog = await BlogRepository.getBlogById(id);
 		if (!blog) {
@@ -56,6 +56,7 @@ blogRoute.put(
 		const id = req.params.id;
 		if (!ObjectId.isValid(id)) {
 			res.sendStatus(404);
+			return;
 		}
 		const resault = BlogRepository.updateBlog(id, req.body);
 		if (!resault) {
@@ -73,9 +74,10 @@ blogRoute.delete(
 		const id = req.params.id;
 		if (!ObjectId.isValid(id)) {
 			res.sendStatus(404);
+			return;
 		}
 		await BlogRepository.deleteBlog(id);
-		res.sendStatus(404);
+		res.sendStatus(204);
 		return;
 	}
 );

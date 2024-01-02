@@ -1,6 +1,6 @@
-import { BlogModel } from '../blog/output';
+import { BlogModel } from '../blogs/output';
 import { VideoType } from '../video/output';
-import { PostModel } from '../post/output';
+import { PostModel } from '../posts/output';
 
 export type DBType = {
 	blogs: BlogModel[];
@@ -12,6 +12,8 @@ export type BlogDBType = {
 	name: string;
 	description: string;
 	websiteUrl: string;
+	createdAt: string;
+	isMembership: boolean;
 };
 
 export type PostDBType = {
@@ -20,4 +22,5 @@ export type PostDBType = {
 	content: string;
 	blogId: string;
 	blogName: string;
+	createdAt: string;
 };

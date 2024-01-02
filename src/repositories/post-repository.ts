@@ -1,10 +1,10 @@
 import { randomUUID } from 'crypto';
 
-import { CreatePostModel, UpdatePostModel } from '../types/post/input';
-import { PostModel } from '../types/post/output';
+import { CreatePostModel, UpdatePostModel } from '../types/posts/input';
+import { PostModel } from '../types/posts/output';
 import { BlogRepository } from './blog-repository';
 import { postCollection } from '../db/db';
-import { postMapper } from '../types/post/mappers';
+import { postMapper } from '../types/posts/mappers';
 import { ObjectId } from 'mongodb';
 
 export class PostRepository {

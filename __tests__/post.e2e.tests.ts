@@ -1,12 +1,13 @@
 import request from 'supertest';
 import { app } from '../src/settings';
-import { PostModel } from '../src/types/post/output';
+import { PostModel } from '../src/types/posts/output';
 import { MongoClient } from 'mongodb';
 import dotenv from 'dotenv';
 dotenv.config();
 const url = process.env.MONGO_URL || 'mongodb://localhost:27017';
 describe('/posts', () => {
 	const client = new MongoClient(url);
+
 	beforeAll(async () => {
 		await client.connect();
 	});
@@ -14,11 +15,12 @@ describe('/posts', () => {
 	afterAll(async () => {
 		await client.close();
 	});
+	afterAll((done) => done());
 	let blogId: any;
 
 	let newPost: PostModel | null;
-	it('Create blog id', async () => {
-		await request(app).post('/blogs').auth('admin', 'qwerty').send({
+	it('Create post', async () => {
+		await request(app).post('/blogs').auth('admin', 'admin').send({
 			name: 'Hello Title',
 			description: 'Hello Author',
 			websiteUrl: 'https://fadfamssDSS-amdfasd-adfmasdf',
@@ -33,10 +35,7 @@ describe('/posts', () => {
 	});
 
 	it('- GET post by ID with incorrect id', async () => {
-		await request(app).get('/posts/12312123').expect(404);
-	});
-	it('+ GET post by ID with correct id', async () => {
-		await request(app).get('/posts/' + newPost?.id);
+		await request(app).get('/posts/123121232314567894582134').expect(404);
 	});
 	it('- POST does not create the post without authorization', async function () {
 		await request(app)
@@ -53,7 +52,7 @@ describe('/posts', () => {
 	it('- POST does not create the post with incorrect data (no title, no shortDescription)', async function () {
 		const resault = await request(app)
 			.post('/posts')
-			.auth('admin', 'qwerty')
+			.auth('admin', 'admin')
 			.send({
 				title: '',
 				shortDescription: '',
@@ -66,7 +65,7 @@ describe('/posts', () => {
 	it('+ POST create the post with correct data', async function () {
 		const result = await request(app)
 			.post('/posts')
-			.auth('admin', 'qwerty')
+			.auth('admin', 'admin')
 			.send({
 				title: 'Hello',
 				shortDescription: 'My day',
@@ -76,11 +75,14 @@ describe('/posts', () => {
 			.expect(201);
 		newPost = result.body;
 	});
+	it('+ GET post by ID with correct id', async () => {
+		await request(app).get('/posts/' + newPost?.id);
+	});
 
 	it('+ PUT create the post with correct data', async function () {
 		const result = await request(app)
 			.put(`/posts/${newPost?.id}`)
-			.auth('admin', 'qwerty')
+			.auth('admin', 'admin')
 			.send({
 				title: 'Hello',
 				shortDescription: 'My day',
@@ -91,8 +93,8 @@ describe('/posts', () => {
 	});
 	it('- PUT try to update not found post', async function () {
 		await request(app)
-			.put('/posts/123')
-			.auth('admin', 'qwerty')
+			.put('/posts/123456789112345678911234')
+			.auth('admin', 'admin')
 			.send({
 				title: 'Hello',
 				shortDescription: 'My day',
@@ -104,11 +106,13 @@ describe('/posts', () => {
 	it('+ DELETE post by ID with correct id', async () => {
 		await request(app)
 			.delete(`/posts/${newPost?.id}`)
-			.auth('admin', 'qwerty')
+			.auth('admin', 'admin')
 			.expect(204);
 	});
 
 	it('- DELETE post by ID with incorrect id', async () => {
-		await request(app).delete('/post/4783645').auth('admin', 'qwerty');
+		await request(app)
+			.delete('/post/123456789112345678911234')
+			.auth('admin', 'admin');
 	});
 });

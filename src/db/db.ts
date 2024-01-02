@@ -1,8 +1,8 @@
 import { MongoClient } from 'mongodb';
-import { BlogDBType, DBType, PostDBType } from '../types/db/db';
+import { BlogDBType, PostDBType } from '../types/db/db';
 
 const port: number = 80;
-const url = process.env.MONGO_URL || 'mongodb://localhost:27017';
+const url = 'mongodb://localhost:27017';
 
 const client: MongoClient = new MongoClient(url);
 

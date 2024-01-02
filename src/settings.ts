@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
 
 // import { videoRoute } from './routes/video-route';
 import { blogRoute } from './routes/blog-route';

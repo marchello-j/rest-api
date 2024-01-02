@@ -1,9 +1,9 @@
 import { randomUUID } from 'crypto';
 
-import { CreateBlogModel, UpdateBlogModel } from '../types/blog/input';
-import { BlogModel } from '../types/blog/output';
+import { CreateBlogModel, UpdateBlogModel } from '../types/blogs/input';
+import { BlogModel } from '../types/blogs/output';
 import { blogCollection } from '../db/db';
-import { blogMapper } from '../types/blog/mapers';
+import { blogMapper } from '../types/blogs/mapers';
 import { ObjectId } from 'mongodb';
 
 export class BlogRepository {
@@ -27,7 +27,7 @@ export class BlogRepository {
 			description: createData.description,
 			websiteUrl: createData.websiteUrl,
 			createdAt: new Date().toISOString(),
-			isMembership: true,
+			isMembership: false,
 		};
 		return {
 			...newBlog,
@@ -39,6 +39,7 @@ export class BlogRepository {
 		id: string,
 		updateBlog: UpdateBlogModel
 	): Promise<boolean> {
+		if(!ObjectId.isValid(id)) return false
 		const blog = await blogCollection.updateOne(
 			{ _id: new ObjectId(id) },
 			{

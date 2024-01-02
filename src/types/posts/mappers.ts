@@ -10,5 +10,6 @@ export const postMapper = (postDB: WithId<PostDBType>): PostModel => {
 		content: postDB.content,
 		blogId: postDB.blogId,
 		blogName: postDB.blogName,
+		createdAt: postDB.createdAt,
 	};
 };

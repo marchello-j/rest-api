@@ -6,11 +6,11 @@ import {
 	RequestWithBodyAndParams,
 	RequestWithParams,
 } from '../types/common';
-import { PostModel } from '../types/post/output';
+import { PostModel } from '../types/posts/output';
 import { authMiddleware } from '../middleware/auth/auth-middleware';
 import { postValidation } from '../validators/post-validattion';
-import { CreateBlogModel } from '../types/blog/input';
-import { CreatePostModel, UpdatePostModel } from '../types/post/input';
+import { CreateBlogModel } from '../types/blogs/input';
+import { CreatePostModel, UpdatePostModel } from '../types/posts/input';
 import { ObjectId } from 'mongodb';
 
 export const postRoute = Router();
