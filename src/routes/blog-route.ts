@@ -1,16 +1,11 @@
 import { Router, Request, Response } from 'express';
 import { BlogRepository } from '../repositories/blog-repository';
-import {
-	RequestWithParams,
-	RequestWithBody,
-	RequestWithBodyAndParams,
-} from '../types/common';
+import { RequestWithParams, RequestWithBody, RequestWithBodyAndParams } from '../types/common';
 import { Params } from '../types/common';
 import { authMiddleware } from '../middleware/auth/auth-middleware';
 import { blogValidation } from '../validators/blog-validator';
 import { CreateBlogModel, UpdateBlogModel } from '../types/blogs/input';
 import { BlogModel } from '../types/blogs/output';
-import { ObjectId } from 'mongodb';
 
 export const blogRoute = Router();
 
@@ -19,20 +14,14 @@ blogRoute.get('/', async (req: Request, res: Response<BlogModel[]>) => {
 	return res.send(blogs);
 });
 
-blogRoute.get(
-	'/:id',
-	async (req: RequestWithParams<Params>, res: Response<null | BlogModel>) => {
-		const id = req.params.id;
-		if (!ObjectId.isValid(id)) {
-			return res.sendStatus(404);
-		}
-		const blog = await BlogRepository.getBlogById(id);
-		if (!blog) {
-			return res.sendStatus(404);
-		}
-		return res.status(200).send(blog);
+blogRoute.get('/:id', async (req: RequestWithParams<Params>, res: Response<null | BlogModel>) => {
+	const id = req.params.id;
+	const blog = await BlogRepository.getBlogById(id);
+	if (!blog) {
+		return res.sendStatus(404);
 	}
-);
+	return res.status(200).send(blog);
+});
 
 blogRoute.post(
 	'/',
@@ -49,16 +38,8 @@ blogRoute.put(
 	'/:id',
 	authMiddleware,
 	blogValidation(),
-	async (
-		req: RequestWithBodyAndParams<Params, UpdateBlogModel>,
-		res: Response<void>
-	) => {
+	async (req: RequestWithBodyAndParams<Params, UpdateBlogModel>, res: Response<void>) => {
 		const id = req.params.id;
-		if (!ObjectId.isValid(id)) {
-			res.sendStatus(404);
-			return;
-		}
-
 		const blog = await BlogRepository.getBlogById(id);
 		if (!blog) {
 			res.sendStatus(404);
@@ -78,10 +59,6 @@ blogRoute.delete(
 	authMiddleware,
 	async (req: RequestWithParams<Params>, res: Response<void>) => {
 		const id = req.params.id;
-		if (!ObjectId.isValid(id)) {
-			res.sendStatus(404);
-			return;
-		}
 		const blog = await BlogRepository.getBlogById(id);
 		if (!blog) {
 			return res.sendStatus(404);

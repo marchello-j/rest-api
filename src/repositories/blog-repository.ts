@@ -13,6 +13,9 @@ export class BlogRepository {
 		return blogs.map(blogMapper);
 	}
 	static async getBlogById(id: string): Promise<BlogModel | null> {
+		if (!ObjectId.isValid(id)) {
+			return null;
+		}
 		const blog = await blogCollection.findOne({ _id: new ObjectId(id) });
 		if (!blog) {
 			return null;
@@ -35,10 +38,7 @@ export class BlogRepository {
 		};
 	}
 
-	static async updateBlog(
-		id: string,
-		updateBlog: UpdateBlogModel
-	): Promise<boolean> {
+	static async updateBlog(id: string, updateBlog: UpdateBlogModel): Promise<boolean> {
 		if (!ObjectId.isValid(id)) return false;
 		const blog = await blogCollection.updateOne(
 			{ _id: new ObjectId(id) },
@@ -55,6 +55,9 @@ export class BlogRepository {
 	}
 	static async deleteBlog(id: string): Promise<boolean> {
 		const blog = await blogCollection.deleteOne({ _id: new ObjectId(id) });
+		if (!ObjectId.isValid(id)) {
+			return false;
+		}
 		return !!blog.deletedCount;
 	}
 }
