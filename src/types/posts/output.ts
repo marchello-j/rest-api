@@ -7,3 +7,11 @@ export type PostModel = {
 	blogName: string;
 	createdAt: string;
 };
+
+export type ResponsePostModel = {
+	sortBy?: string;
+	sortDirection?: string;
+	pageNumber?: number;
+	pageSize?: number;
+	items: PostModel[];
+};

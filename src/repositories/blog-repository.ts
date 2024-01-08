@@ -1,16 +1,46 @@
 import { randomUUID } from 'crypto';
 
-import { CreateBlogModel, UpdateBlogModel } from '../types/blogs/input';
+import { CreateBlogModel, CreatePostBlogModel, UpdateBlogModel } from '../types/blogs/input';
 import { BlogModel } from '../types/blogs/output';
-import { blogCollection } from '../db/db';
+import { blogCollection, postCollection } from '../db/db';
 import { blogMapper } from '../types/blogs/mapers';
 import { ObjectId } from 'mongodb';
+import { QueryBlogInput } from '../types/blogs/query';
 
 export class BlogRepository {
-	static async getAllBlogs(): Promise<BlogModel[]> {
-		const blogs = await blogCollection.find({}).toArray();
-
-		return blogs.map(blogMapper);
+	static async getAllBlogs(sortData: QueryBlogInput) {
+		const searchNameTerm = sortData.searchNameTerm ?? null;
+		const sortBy = sortData.sortBy ?? 'createdAt';
+		const sortDirection = sortData.sortDirection ?? 'desc';
+		const pageNumber = sortData.pageNumber ?? 1;
+		const pageSize = sortData.pageSize ?? 10;
+		let filter = {};
+		if (searchNameTerm) {
+			filter = {
+				name: { $regex: searchNameTerm, $options: 'i' },
+			};
+		}
+		let sort: { [key: string]: 1 | -1 } = { [sortBy]: -1 };
+		if (sortDirection === 'asc') {
+			sort = {
+				[sortBy]: 1,
+			};
+		}
+		const blogs = await blogCollection
+			.find(filter)
+			.sort(sort)
+			.skip((+pageNumber - 1) * +pageSize)
+			.limit(+pageSize)
+			.toArray();
+		const totalCount = await blogCollection.countDocuments(filter);
+		const pagesCount = Math.ceil(totalCount / +pageSize);
+		return {
+			pagesCount,
+			page: +pageNumber,
+			pageSize: +pageSize,
+			totalCount,
+			items: blogs.map(blogMapper),
+		};
 	}
 	static async getBlogById(id: string): Promise<BlogModel | null> {
 		if (!ObjectId.isValid(id)) {
@@ -36,6 +66,21 @@ export class BlogRepository {
 			...newBlog,
 			id: blog.insertedId.toString(),
 		};
+	}
+	static async createPostToBlog(blogId: string, postData: CreatePostBlogModel) {
+		const blog = await BlogRepository.getBlogById(blogId);
+
+		const post = {
+			title: postData.title,
+			shortDescription: postData.shortDescription,
+			content: postData.content,
+			blogId: blog!.id,
+			blogName: blog!.name,
+			createdAt: new Date().toISOString(),
+		};
+
+		const res = await postCollection.insertOne(post);
+		return res.insertedId;
 	}
 
 	static async updateBlog(id: string, updateBlog: UpdateBlogModel): Promise<boolean> {

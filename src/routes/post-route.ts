@@ -5,6 +5,7 @@ import {
 	RequestWithBody,
 	RequestWithBodyAndParams,
 	RequestWithParams,
+	RequestWithQuery,
 } from '../types/common';
 import { PostModel } from '../types/posts/output';
 import { authMiddleware } from '../middleware/auth/auth-middleware';
@@ -12,29 +13,33 @@ import { postValidation } from '../validators/post-validattion';
 import { CreateBlogModel } from '../types/blogs/input';
 import { CreatePostModel, UpdatePostModel } from '../types/posts/input';
 import { ObjectId } from 'mongodb';
+import { QueryPostInput } from '../types/posts/query';
 
 export const postRoute = Router();
 
-postRoute.get('/', async (req: Request, res: Response) => {
-	const posts = await PostRepository.getAllPosts();
+postRoute.get('/', async (req: RequestWithQuery<QueryPostInput>, res: Response) => {
+	const sortData = {
+		sortBy: req.query.sortBy,
+		sortDirection: req.query.sortDirection,
+		pageNumber: req.query.pageNumber,
+		pageSize: req.query.pageSize,
+	};
+	const posts = await PostRepository.getAllPosts(sortData);
 	res.send(posts);
 });
 
-postRoute.get(
-	'/:id',
-	async (req: RequestWithParams<Params>, res: Response<null | PostModel>) => {
-		const id = req.params.id;
+postRoute.get('/:id', async (req: RequestWithParams<Params>, res: Response<null | PostModel>) => {
+	const id = req.params.id;
 
-		if (!ObjectId.isValid(id)) {
-			res.sendStatus(404);
-		}
-		const post = await PostRepository.getPostById(id);
-		if (!post) {
-			return res.sendStatus(404);
-		}
-		return res.status(200).send(post);
+	if (!ObjectId.isValid(id)) {
+		res.sendStatus(404);
 	}
-);
+	const post = await PostRepository.getPostById(new ObjectId(id));
+	if (!post) {
+		return res.sendStatus(404);
+	}
+	return res.status(200).send(post);
+});
 
 postRoute.post(
 	'/',
@@ -57,10 +62,7 @@ postRoute.put(
 	'/:id',
 	authMiddleware,
 	postValidation(),
-	async (
-		req: RequestWithBodyAndParams<Params, UpdatePostModel>,
-		res: Response<void>
-	) => {
+	async (req: RequestWithBodyAndParams<Params, UpdatePostModel>, res: Response<void>) => {
 		const id = req.params.id;
 
 		if (!ObjectId.isValid(id)) {
