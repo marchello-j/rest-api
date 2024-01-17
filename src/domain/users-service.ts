@@ -20,7 +20,6 @@ export const userService = {
 	},
 	async checkCredentials(loginOrEmail: string, password: string) {
 		const user = await userQueryRepository.findByLoginOrEmail(loginOrEmail);
-		console.log(user)
 		if (!user) return false;
 		const passwordHash = await this._generateHash(password, user.passwordSalt);
 		if (user.passwordHash !== passwordHash) return false;
