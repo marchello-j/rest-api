@@ -1,5 +1,5 @@
 import { MongoClient } from 'mongodb';
-import { BlogDBType, PostDBType } from '../types/db/db';
+import { BlogDBType, PostDBType, UserDBType } from '../types/db/db';
 import dotenv from 'dotenv'
 
 dotenv.config();
@@ -12,6 +12,7 @@ export const dataBase = client.db('hw');
 
 export const blogCollection = dataBase.collection<BlogDBType>('blogs');
 export const postCollection = dataBase.collection<PostDBType>('posts');
+export const userCollection = dataBase.collection<UserDBType>('users');
 
 export const runDB = async () => {
 	try {

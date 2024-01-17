@@ -1,11 +1,14 @@
 import { BlogModel } from '../blogs/output';
 import { VideoType } from '../video/output';
 import { PostModel } from '../posts/output';
+import { UsersModel } from '../users/output';
+import { ObjectId } from 'mongodb';
 
 export type DBType = {
 	blogs: BlogModel[];
 	posts: PostModel[];
 	videos: VideoType[];
+	users: UsersModel[];
 };
 
 export type BlogDBType = {
@@ -22,5 +25,13 @@ export type PostDBType = {
 	content: string;
 	blogId: string;
 	blogName: string;
+	createdAt: string;
+};
+
+export type UserDBType = {
+	login: string;
+	email: string;
+	passwordHash: string;
+	passwordSalt: string;
 	createdAt: string;
 };

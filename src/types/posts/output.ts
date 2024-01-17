@@ -9,9 +9,9 @@ export type PostModel = {
 };
 
 export type ResponsePostModel = {
-	sortBy?: string;
-	sortDirection?: string;
-	pageNumber?: number;
-	pageSize?: number;
+	pagesCount: number;
+	page: number;
+	pageSize: number;
+	totalCount: number;
 	items: PostModel[];
 };

@@ -18,6 +18,9 @@ import { validationForBlogInPost } from '../validators/validationForBlogInPost';
 import { PostRepository } from '../repositories/post-repository';
 import { PostModel } from '../types/posts/output';
 import { ResponsePostModel } from '../types/posts/output';
+import { BlogQueryRepository } from '../repositories/blog-query-repository';
+import { BlogService } from '../domain/blogs-service';
+import { PostQueryRepository } from '../repositories/post-query-repository';
 
 export const blogRoute = Router();
 
@@ -31,7 +34,7 @@ blogRoute.get(
 			pageNumber: req.query.pageNumber,
 			pageSize: req.query.pageSize,
 		};
-		const blogs = await BlogRepository.getAllBlogs(sortData);
+		const blogs = await BlogQueryRepository.getAllBlogs(sortData);
 
 		return res.send(blogs);
 	}
@@ -39,7 +42,7 @@ blogRoute.get(
 
 blogRoute.get('/:id', async (req: RequestWithParams<Params>, res: Response<null | BlogModel>) => {
 	const id = req.params.id;
-	const blog = await BlogRepository.getBlogById(id);
+	const blog = await BlogQueryRepository.getBlogById(id);
 	if (!blog) {
 		return res.sendStatus(404);
 	}
@@ -52,7 +55,10 @@ blogRoute.post(
 	blogValidation(),
 	async (req: RequestWithBody<CreateBlogModel>, res: Response<BlogModel>) => {
 		const inputDto = req.body;
-		const blog = await BlogRepository.createBlog(inputDto);
+		const blog = await BlogService.addBlog(inputDto);
+		if (!blog) {
+			return res.sendStatus(400);
+		}
 		return res.status(201).send(blog);
 	}
 );
@@ -62,28 +68,15 @@ blogRoute.post(
 	authMiddleware,
 	validationForBlogInPost(),
 	async (req: RequestWithBodyAndParams<Params, CreatePostBlogModel>, res: Response<PostModel>) => {
-		const title = req.body.title;
-		const shortDescription = req.body.shortDescription;
-		const content = req.body.content;
+		const { title, shortDescription, content } = req.body;
 		const blogId = req.params.id;
-		const blog = await BlogRepository.getBlogById(blogId);
+		const newPost = await BlogService.addPostToBlog(blogId, { title, shortDescription, content });
 
-		if (!blog) {
+		if (!newPost) {
 			res.sendStatus(404);
 			return;
 		}
-		const createPostId = await BlogRepository.createPostToBlog(blogId, {
-			title,
-			shortDescription,
-			content,
-		});
-		const post = await PostRepository.getPostById(createPostId);
-		if (!post) {
-			res.sendStatus(404);
-			return;
-		}
-
-		return res.status(201).send(post);
+		return res.status(201).send(newPost);
 	}
 );
 
@@ -102,12 +95,12 @@ blogRoute.get(
 		};
 		const blogId = req.params.id;
 
-		const blog = await BlogRepository.getBlogById(blogId);
+		const blog = await BlogQueryRepository.getBlogById(blogId);
 		if (!blog) {
 			res.sendStatus(404);
 			return;
 		}
-		const postInBlog = await PostRepository.getAllPostsInBlog(sortData, blogId);
+		const postInBlog = await BlogQueryRepository.getAllPostsInBlog(sortData, blogId);
 
 		return res.status(200).send(postInBlog);
 	}
@@ -119,13 +112,10 @@ blogRoute.put(
 	blogValidation(),
 	async (req: RequestWithBodyAndParams<Params, UpdateBlogModel>, res: Response<void>) => {
 		const id = req.params.id;
-		const blog = await BlogRepository.getBlogById(id);
-		if (!blog) {
-			res.sendStatus(404);
-			return;
-		}
-		const resault = await BlogRepository.updateBlog(id, req.body);
-		if (!resault) {
+		const { name, description, websiteUrl } = req.body;
+		const updateResult = await BlogService.updatePostToBlog(id, { name, description, websiteUrl });
+
+		if (!updateResult) {
 			res.sendStatus(404);
 			return;
 		}
@@ -138,7 +128,7 @@ blogRoute.delete(
 	authMiddleware,
 	async (req: RequestWithParams<Params>, res: Response<void>) => {
 		const id = req.params.id;
-		const blog = await BlogRepository.getBlogById(id);
+		const blog = await BlogQueryRepository.getBlogById(id);
 		if (!blog) {
 			return res.sendStatus(404);
 		}

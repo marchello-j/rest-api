@@ -3,7 +3,7 @@ export type CreateBlogModel = {
 	description: string;
 	websiteUrl: string;
 	createdAt: string;
-	isMembership: true;
+	isMembership: boolean;
 };
 
 export type UpdateBlogModel = {

@@ -1,5 +1,3 @@
-import { ObjectId } from 'mongodb';
-
 export type BlogModel = {
 	id: string;
 	name: string;

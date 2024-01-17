@@ -3,6 +3,8 @@ export type CreatePostModel = {
 	shortDescription: string;
 	content: string;
 	blogId: string;
+	blogName: string;
+	createdAt: string;
 };
 
 export type UpdatePostModel = {
