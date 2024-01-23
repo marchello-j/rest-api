@@ -66,12 +66,6 @@ describe('/blogs', () => {
 		const result = await request(app).get('/blogs').expect(200);
 		expect(result.body);
 	});
-	it('+ DELETE blog by ID with correct id', async () => {
-		await request(app)
-			.delete(`/blogs/${newBlog?.id}`)
-			.auth('admin', 'qwerty')
-			.expect(204);
-	});
 
 	it('+ PUT create the blog with correct data', async function () {
 		const result = await request(app)
@@ -80,7 +74,7 @@ describe('/blogs', () => {
 			.send({
 				name: 'Hello Title',
 				description: 'Hello Author',
-				websiteUrl: 'https://fadfamssDSS-amdfasd-adfmasdf',
+				websiteUrl: 'https://facebook.com',
 			})
 			.expect(204);
 	});
@@ -97,9 +91,10 @@ describe('/blogs', () => {
 			.expect(404);
 	});
 
+	it('+ DELETE blog by ID with correct id', async () => {
+		await request(app).delete(`/blogs/${newBlog?.id}`).auth('admin', 'qwerty').expect(204);
+	});
 	it('- DELETE blog by ID with incorrect id', async () => {
-		await request(app)
-			.delete('/blogs/478364578945612332145698')
-			.auth('admin', 'qwerty');
+		await request(app).delete('/blogs/478364578945612332145698').auth('admin', 'qwerty');
 	});
 });

@@ -3,10 +3,12 @@ import { app } from '../src/settings';
 import { PostModel } from '../src/types/posts/output';
 import { MongoClient } from 'mongodb';
 import dotenv from 'dotenv';
+import { BlogModel } from '../src/types/blogs/output';
 dotenv.config();
 const url = process.env.MONGO_URL || 'mongodb://localhost:27017';
 describe('/posts', () => {
 	const client = new MongoClient(url);
+	let newBlog: BlogModel | null;
 
 	beforeAll(async () => {
 		await client.connect();
@@ -26,8 +28,7 @@ describe('/posts', () => {
 			websiteUrl: 'https://fadfamssDSS-amdfasd-adfmasdf',
 		});
 		const result = await request(app).get('/blogs');
-		blogId = result.body[0].id;
-		console.log(blogId, 'Blog ID');
+		blogId = await request(app).get('/blogs/' + newPost?.id);
 	});
 	it('GET post = []', async () => {
 		const result = await request(app).get('/posts').expect(200);
@@ -47,6 +48,7 @@ describe('/posts', () => {
 				blogId: blogId,
 			})
 			.expect(401);
+		blogId = await request(app).get('/blogs/' + newPost?.id);
 	});
 
 	it('- POST does not create the post with incorrect data (no title, no shortDescription)', async function () {
@@ -104,15 +106,10 @@ describe('/posts', () => {
 			.expect(404);
 	});
 	it('+ DELETE post by ID with correct id', async () => {
-		await request(app)
-			.delete(`/posts/${newPost?.id}`)
-			.auth('admin', 'qwerty')
-			.expect(204);
+		await request(app).delete(`/posts/${newPost?.id}`).auth('admin', 'qwerty').expect(204);
 	});
 
 	it('- DELETE post by ID with incorrect id', async () => {
-		await request(app)
-			.delete('/post/123456789112345678911234')
-			.auth('admin', 'admin');
+		await request(app).delete('/post/123456789112345678911234').auth('admin', 'admin');
 	});
 });

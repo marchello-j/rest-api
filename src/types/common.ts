@@ -9,11 +9,9 @@ export type RequestWithQueryAndParams<P, Q> = Request<P, {}, {}, Q>;
 export type Params = {
 	id: string;
 };
-
 export type ErrorType = {
 	errorsMessages: ErrorMessageType[];
 };
-
 export type ErrorMessageType = {
 	field: string;
 	message: string;

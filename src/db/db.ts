@@ -3,7 +3,7 @@ import { BlogDBType, PostDBType, UserDBType } from '../types/db/db';
 import dotenv from 'dotenv'
 
 dotenv.config();
-const port: number = 80;
+const port: number = 3030;
 const url = process.env.MONGO_URL || 'mongodb://0.0.0.0:27017';
 
 const client: MongoClient = new MongoClient(url);
