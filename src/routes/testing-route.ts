@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { blogCollection, postCollection, userCollection } from '../db/db';
+import { HTTP_STATUSES } from '../uitls/utils';
 
 export const deleteAllDataRoute = Router({});
 
@@ -8,5 +9,5 @@ deleteAllDataRoute.delete('/', async (req: Request, res: Response) => {
 	await blogCollection.deleteMany({});
 	await postCollection.deleteMany({});
 	await userCollection.deleteMany({});
-	res.sendStatus(204);
+	res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
 });

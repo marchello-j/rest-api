@@ -9,9 +9,15 @@ import { authRouter } from './routes/auth-router';
 
 export const app = express();
 app.use(express.json());
-
-app.use('/testing/all-data', deleteAllDataRoute);
-app.use('/blogs', blogRoute);
-app.use('/posts', postRoute);
-app.use('/users', usersRoute);
-app.use('/auth', authRouter);
+export const RouterPaths = {
+  blogs: '/blogs',
+  posts: '/posts',
+  users: '/users',
+  auth: '/auth',
+  test: '/testing/all-data'
+}
+app.use(RouterPaths.test, deleteAllDataRoute);
+app.use(RouterPaths.blogs, blogRoute);
+app.use(RouterPaths.posts, postRoute);
+app.use(RouterPaths.users, usersRoute);
+app.use(RouterPaths.auth, authRouter);

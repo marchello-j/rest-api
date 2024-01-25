@@ -1,6 +1,6 @@
-import { CreateBlogModel, CreatePostBlogModel, UpdateBlogModel } from '../types/blogs/input';
-import { BlogModel } from '../types/blogs/output';
-import { blogCollection, postCollection } from '../db/db';
+import { CreateBlogModel, CreatePostBlogModel, UpdateBlogModel } from '../../types/blogs/input';
+import { BlogModel } from '../../types/blogs/output';
+import { blogCollection, postCollection } from '../../db/db';
 import { ObjectId } from 'mongodb';
 import { BlogQueryRepository } from './blog-query-repository';
 export class BlogRepository {

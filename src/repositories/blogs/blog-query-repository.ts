@@ -1,11 +1,11 @@
-import { BlogModel } from '../types/blogs/output';
-import { blogCollection, postCollection } from '../db/db';
-import { blogMapper } from '../types/blogs/mapers';
+import { BlogModel } from '../../types/blogs/output';
+import { blogCollection, postCollection } from '../../db/db';
+import { blogMapper } from '../../types/blogs/mapers';
 import { ObjectId } from 'mongodb';
-import { QueryBlogInput } from '../types/blogs/query';
-import { ResponseBlogModel } from '../types/blogs/output';
-import { postMapper } from '../types/posts/mappers';
-import { QueryPostInput } from '../types/posts/query';
+import { QueryBlogInput } from '../../types/blogs/query';
+import { ResponseBlogModel } from '../../types/blogs/output';
+import { postMapper } from '../../types/posts/mappers';
+import { QueryPostInput } from '../../types/posts/query';
 
 export class BlogQueryRepository {
 	static async getAllBlogs(sortData: QueryBlogInput): Promise<ResponseBlogModel> {

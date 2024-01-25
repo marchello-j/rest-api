@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { BlogRepository } from '../repositories/blog-repository';
+import { BlogRepository } from '../repositories/blogs/blog-repository';
 import {
 	RequestWithParams,
 	RequestWithBody,
@@ -15,12 +15,13 @@ import { BlogModel } from '../types/blogs/output';
 import { QueryBlogInput } from '../types/blogs/query';
 import { ResponseBlogModel } from '../types/blogs/output';
 import { validationForBlogInPost } from '../validators/validationForBlogInPost';
-import { PostRepository } from '../repositories/post-repository';
+import { PostRepository } from '../repositories/posts/post-repository';
 import { PostModel } from '../types/posts/output';
 import { ResponsePostModel } from '../types/posts/output';
-import { BlogQueryRepository } from '../repositories/blog-query-repository';
+import { BlogQueryRepository } from '../repositories/blogs/blog-query-repository';
 import { BlogService } from '../domain/blogs-service';
-import { PostQueryRepository } from '../repositories/post-query-repository';
+import { PostQueryRepository } from '../repositories/posts/post-query-repository';
+import { HTTP_STATUSES } from '../uitls/utils';
 
 export const blogRoute = Router();
 
@@ -44,9 +45,9 @@ blogRoute.get('/:id', async (req: RequestWithParams<Params>, res: Response<null 
 	const id = req.params.id;
 	const blog = await BlogQueryRepository.getBlogById(id);
 	if (!blog) {
-		return res.sendStatus(404);
+		return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
 	}
-	return res.status(200).send(blog);
+	return res.status(HTTP_STATUSES.OK_200).send(blog);
 });
 
 blogRoute.post(
@@ -57,9 +58,9 @@ blogRoute.post(
 		const inputDto = req.body;
 		const blog = await BlogService.addBlog(inputDto);
 		if (!blog) {
-			return res.sendStatus(400);
+			return res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400);
 		}
-		return res.status(201).send(blog);
+		return res.status(HTTP_STATUSES.CREATED_201).send(blog);
 	}
 );
 
@@ -73,10 +74,10 @@ blogRoute.post(
 		const newPost = await BlogService.addPostToBlog(blogId, { title, shortDescription, content });
 
 		if (!newPost) {
-			res.sendStatus(404);
+			res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400);
 			return;
 		}
-		return res.status(201).send(newPost);
+		return res.status(HTTP_STATUSES.CREATED_201).send(newPost);
 	}
 );
 
@@ -97,12 +98,12 @@ blogRoute.get(
 
 		const blog = await BlogQueryRepository.getBlogById(blogId);
 		if (!blog) {
-			res.sendStatus(404);
+			res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
 			return;
 		}
 		const postInBlog = await BlogQueryRepository.getAllPostsInBlog(sortData, blogId);
 
-		return res.status(200).send(postInBlog);
+		return res.status(HTTP_STATUSES.OK_200).send(postInBlog);
 	}
 );
 
@@ -116,10 +117,10 @@ blogRoute.put(
 		const updateResult = await BlogService.updatePostToBlog(id, { name, description, websiteUrl });
 
 		if (!updateResult) {
-			res.sendStatus(404);
+			res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
 			return;
 		}
-		res.sendStatus(204);
+		res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
 	}
 );
 
@@ -130,10 +131,10 @@ blogRoute.delete(
 		const id = req.params.id;
 		const blog = await BlogQueryRepository.getBlogById(id);
 		if (!blog) {
-			return res.sendStatus(404);
+			return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
 		}
 		await BlogRepository.deleteBlog(id);
-		res.sendStatus(204);
+		res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
 		return;
 	}
 );

@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 import { NextFunction, Request, Response } from 'express';
+import { HTTP_STATUSES } from '../../uitls/utils';
 
 dotenv.config();
 
@@ -17,14 +18,14 @@ export const authMiddleware = (
 	const auth = req.headers['authorization'];
 
 	if (!auth) {
-		res.sendStatus(401);
+		res.sendStatus(HTTP_STATUSES.UNAUTHORAIZED_401);
 		return;
 	}
 
 	const [basic, token] = auth.split(' ');
 
 	if (basic !== 'Basic') {
-		res.sendStatus(401);
+		res.sendStatus(HTTP_STATUSES.UNAUTHORAIZED_401);
 		return;
 	}
 
@@ -36,7 +37,7 @@ export const authMiddleware = (
 		login !== process.env.AUTH_LOGIN ||
 		password !== process.env.AUTH_PASSWORD
 	) {
-		res.sendStatus(401);
+		res.sendStatus(HTTP_STATUSES.UNAUTHORAIZED_401);
 		return;
 	}
 

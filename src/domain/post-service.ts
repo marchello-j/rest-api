@@ -1,6 +1,6 @@
-import { BlogQueryRepository } from '../repositories/blog-query-repository';
-import { PostQueryRepository } from '../repositories/post-query-repository';
-import { PostRepository } from '../repositories/post-repository';
+import { BlogQueryRepository } from '../repositories/blogs/blog-query-repository';
+import { PostQueryRepository } from '../repositories/posts/post-query-repository';
+import { PostRepository } from '../repositories/posts/post-repository';
 import { CreatePostModel, UpdatePostModel } from '../types/posts/input';
 
 export class PostService {

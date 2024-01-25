@@ -1,6 +1,7 @@
 import { ValidationError, validationResult } from 'express-validator';
 
 import { NextFunction, Request, Response } from 'express';
+import { HTTP_STATUSES } from '../../uitls/utils';
 
 export const inputValidation = (
 	req: Request,
@@ -29,7 +30,7 @@ export const inputValidation = (
 		const errors = {
 			errorsMessages: errorMessage,
 		};
-		res.status(400).send(errors);
+		res.status(HTTP_STATUSES.BAD_REQUEST_400).send(errors);
 		return;
 	}
 	return next();

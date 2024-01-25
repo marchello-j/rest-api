@@ -1,6 +1,6 @@
-import { BlogQueryRepository } from '../repositories/blog-query-repository';
-import { BlogRepository } from '../repositories/blog-repository';
-import { PostQueryRepository } from '../repositories/post-query-repository';
+import { BlogQueryRepository } from '../repositories/blogs/blog-query-repository';
+import { BlogRepository } from '../repositories/blogs/blog-repository';
+import { PostQueryRepository } from '../repositories/posts/post-query-repository';
 import { CreateBlogModel, UpdateBlogModel } from '../types/blogs/input';
 import { CreatePostBlogModel } from '../types/blogs/input';
 

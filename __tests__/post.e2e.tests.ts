@@ -4,6 +4,7 @@ import { PostModel } from '../src/types/posts/output';
 import { MongoClient } from 'mongodb';
 import dotenv from 'dotenv';
 import { BlogModel } from '../src/types/blogs/output';
+import { HTTP_STATUSES } from '../src/uitls/utils';
 dotenv.config();
 const url = process.env.MONGO_URL || 'mongodb://localhost:27017';
 describe('/posts', () => {
@@ -28,15 +29,16 @@ describe('/posts', () => {
 			websiteUrl: 'https://fadfamssDSS-amdfasd-adfmasdf',
 		});
 		const result = await request(app).get('/blogs');
-		blogId = await request(app).get('/blogs/' + newPost?.id);
+		blogId = result.body[0].id;
+		console.log(blogId, 'Blog ID');
 	});
 	it('GET post = []', async () => {
-		const result = await request(app).get('/posts').expect(200);
+		const result = await request(app).get('/posts').expect(HTTP_STATUSES.OK_200);
 		expect(result.body);
 	});
 
 	it('- GET post by ID with incorrect id', async () => {
-		await request(app).get('/posts/123121232314567894582134').expect(404);
+		await request(app).get('/posts/123121232314567894582134').expect(HTTP_STATUSES.NOT_FOUND_404);
 	});
 	it('- POST does not create the post without authorization', async function () {
 		await request(app)
@@ -47,7 +49,7 @@ describe('/posts', () => {
 				content: 'string to string about me all the time',
 				blogId: blogId,
 			})
-			.expect(401);
+			.expect(HTTP_STATUSES.UNAUTHORAIZED_401);
 		blogId = await request(app).get('/blogs/' + newPost?.id);
 	});
 
@@ -61,7 +63,7 @@ describe('/posts', () => {
 				content: 'string to string about me all the time',
 				blogId: blogId,
 			})
-			.expect(400);
+			.expect(HTTP_STATUSES.BAD_REQUEST_400);
 		expect(resault.body).toEqual({ errorsMessages: expect.any(Array) });
 	});
 	it('+ POST create the post with correct data', async function () {
@@ -74,7 +76,7 @@ describe('/posts', () => {
 				content: 'string to string about me all the time',
 				blogId: blogId,
 			})
-			.expect(201);
+			.expect(HTTP_STATUSES.CREATED_201);
 		newPost = result.body;
 	});
 	it('+ GET post by ID with correct id', async () => {
@@ -91,7 +93,7 @@ describe('/posts', () => {
 				content: 'string to string about me all the time',
 				blogId: blogId,
 			})
-			.expect(204);
+			.expect(HTTP_STATUSES.NO_CONTENT_204);
 	});
 	it('- PUT try to update not found post', async function () {
 		await request(app)
@@ -103,13 +105,13 @@ describe('/posts', () => {
 				content: 'string to string about me all the time',
 				blogId: blogId,
 			})
-			.expect(404);
+			.expect(HTTP_STATUSES.NOT_FOUND_404);
 	});
 	it('+ DELETE post by ID with correct id', async () => {
-		await request(app).delete(`/posts/${newPost?.id}`).auth('admin', 'qwerty').expect(204);
+		await request(app).delete(`/posts/${newPost?.id}`).auth('admin', 'qwerty').expect(HTTP_STATUSES.NO_CONTENT_204);
 	});
 
 	it('- DELETE post by ID with incorrect id', async () => {
-		await request(app).delete('/post/123456789112345678911234').auth('admin', 'admin');
+		await request(app).delete('/posts/123456789112345678911234').auth('admin', 'admin').expect(HTTP_STATUSES.NOT_FOUND_404);
 	});
 });

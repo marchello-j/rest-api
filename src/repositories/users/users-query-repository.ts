@@ -1,9 +1,9 @@
 import { ObjectId } from 'mongodb';
-import { userCollection } from '../db/db';
-import { UserDBType } from '../types/db/db';
-import { ResponseUsersModel, UsersModel } from '../types/users/output';
-import { userMapper } from '../types/users/mappers';
-import { QueryUsersInput } from '../types/users/query';
+import { userCollection } from '../../db/db';
+import { UserDBType } from '../../types/db/db';
+import { ResponseUsersModel, UsersModel } from '../../types/users/output';
+import { userMapper } from '../../types/users/mappers';
+import { QueryUsersInput } from '../../types/users/query';
 
 export class userQueryRepository {
 	static async getAllUsers(sortData: QueryUsersInput): Promise<ResponseUsersModel> {

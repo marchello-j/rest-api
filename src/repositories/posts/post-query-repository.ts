@@ -1,8 +1,8 @@
-import { PostModel, ResponsePostModel } from '../types/posts/output';
-import { postCollection } from '../db/db';
-import { postMapper } from '../types/posts/mappers';
+import { PostModel, ResponsePostModel } from '../../types/posts/output';
+import { postCollection } from '../../db/db';
+import { postMapper } from '../../types/posts/mappers';
 import { ObjectId } from 'mongodb';
-import { QueryPostInput } from '../types/posts/query';
+import { QueryPostInput } from '../../types/posts/query';
 
 export class PostQueryRepository {
 	static async getAllPosts(sortData: QueryPostInput): Promise<ResponsePostModel> {

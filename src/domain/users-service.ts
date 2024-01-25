@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
-import { userRepository } from '../repositories/user-repository';
-import { userQueryRepository } from '../repositories/users-query-repository';
+import { userRepository } from '../repositories/users/user-repository';
+import { userQueryRepository } from '../repositories/users/users-query-repository';
 import { CreateUserModel } from '../types/users/input';
 import { OutputUserModel } from '../types/users/output';
 

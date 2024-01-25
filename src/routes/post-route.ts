@@ -1,5 +1,5 @@
 import { Router, Response } from 'express';
-import { PostRepository } from '../repositories/post-repository';
+import { PostRepository } from '../repositories/posts/post-repository';
 import {
 	Params,
 	RequestWithBody,
@@ -12,8 +12,9 @@ import { authMiddleware } from '../middleware/auth/auth-middleware';
 import { postValidation } from '../validators/post-validattion';
 import { CreatePostModel, UpdatePostModel } from '../types/posts/input';
 import { QueryPostInput } from '../types/posts/query';
-import { PostQueryRepository } from '../repositories/post-query-repository';
+import { PostQueryRepository } from '../repositories/posts/post-query-repository';
 import { PostService } from '../domain/post-service';
+import { HTTP_STATUSES } from '../uitls/utils';
 
 export const postRoute = Router();
 
@@ -32,9 +33,9 @@ postRoute.get('/:id', async (req: RequestWithParams<Params>, res: Response<null 
 	const id = req.params.id;
 	const post = await PostQueryRepository.getPostById(id);
 	if (!post) {
-		return res.sendStatus(404);
+		return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
 	}
-	return res.status(200).send(post);
+	return res.status(HTTP_STATUSES.OK_200).send(post);
 });
 
 postRoute.post(
@@ -45,9 +46,9 @@ postRoute.post(
 		const newPost = req.body;
 		const post = await PostService.createPost(newPost);
 		if (!post) {
-			return res.sendStatus(400);
+			return res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400);
 		}
-		return res.status(201).send(post);
+		return res.status(HTTP_STATUSES.CREATED_201).send(post);
 	}
 );
 
@@ -65,10 +66,10 @@ postRoute.put(
 			blogId,
 		});
 		if (!resault) {
-			res.sendStatus(404);
+			res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
 			return;
 		}
-		res.sendStatus(204);
+		res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
 	}
 );
 
@@ -78,14 +79,14 @@ postRoute.delete(
 	async (req: RequestWithParams<Params>, res: Response<void>) => {
 		const postId = req.params.id;
 		if (!postId) {
-			res.sendStatus(404);
+			res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
 		}
 		const isDeleted = await PostRepository.deletePost(req.params.id);
 		if (isDeleted) {
-			res.sendStatus(204);
+			res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
 			return;
 		}
-		res.sendStatus(404);
+		res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
 		return;
 	}
 );
