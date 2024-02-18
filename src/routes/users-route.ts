@@ -1,16 +1,14 @@
-import { Response, Router } from 'express'
-import { userService } from '../domain/users-service'
-import { QueryUsersInput } from '../types/users/query'
-import { ResponseUsersModel, UsersModel } from '../types/users/output'
-import { Params, RequestWithQuery } from '../types/common'
-import { userQueryRepository } from '../repositories/users/users-query-repository'
-import { authMiddleware } from '../middleware/auth/auth-middleware'
-import { CreateUserModel } from '../types/users/input'
-import { RequestWithBody } from '../types/common'
-import { RequestWithParams } from '../types/common'
-import { userRepository } from '../repositories/users/user-repository'
-import { userPostValidation } from '../validators/user-validators'
-import { HTTP_STATUSES } from '../uitls/utils'
+import {Response, Router} from 'express'
+import {userService} from '../domain/users-service'
+import {QueryUsersInput} from '../types/users/query'
+import {ResponseUsersModel, UsersModel} from '../types/users/output'
+import {Params, RequestWithBody, RequestWithParams, RequestWithQuery} from '../types/common'
+import {userQueryRepository} from '../repositories/users/users-query-repository'
+import {CreateUserModel} from '../types/users/input'
+import {userRepository} from '../repositories/users/user-repository'
+import {userPostValidation} from '../validators/user-validators'
+import {HTTP_STATUSES} from '../uitls/utils'
+import {authBasicMiddleware} from "../middleware/auth/basic-middlware";
 
 export const usersRoute = Router({})
 
@@ -36,7 +34,7 @@ usersRoute.get(
 
 usersRoute.post(
   '/',
-  authMiddleware,
+  authBasicMiddleware,
   userPostValidation(),
   async (req: RequestWithBody<CreateUserModel>, res: Response<UsersModel>) => {
     const inputDto = req.body
@@ -50,7 +48,7 @@ usersRoute.post(
 
 usersRoute.delete(
   '/:id',
-  authMiddleware,
+  authBasicMiddleware,
   async (req: RequestWithParams<Params>, res: Response<void>) => {
     const id = req.params.id
     const user = await userQueryRepository.findUserById(id)

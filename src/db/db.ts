@@ -13,6 +13,7 @@ export const dataBase = client.db('hw');
 export const blogCollection = dataBase.collection<BlogDBType>('blogs');
 export const postCollection = dataBase.collection<PostDBType>('posts');
 export const userCollection = dataBase.collection<UserDBType>('users');
+export const feedbackCollection = dataBase.collection('feedbacks')
 
 export const runDB = async (): Promise<void> => {
 	try {
