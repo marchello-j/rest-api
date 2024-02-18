@@ -1,8 +1,9 @@
-import { CreateBlogModel, CreatePostBlogModel, UpdateBlogModel } from '../../types/blogs/input';
-import { BlogModel } from '../../types/blogs/output';
-import { blogCollection, postCollection } from '../../db/db';
-import { ObjectId } from 'mongodb';
-import { BlogQueryRepository } from './blog-query-repository';
+import {CreateBlogModel, CreatePostBlogModel, UpdateBlogModel} from '../../types/blogs/input';
+import {BlogModel} from '../../types/blogs/output';
+import {blogCollection, postCollection} from '../../db/db';
+import {ObjectId} from 'mongodb';
+import {BlogQueryRepository} from './blog-query-repository';
+
 export class BlogRepository {
 	static async createBlog(newBlog: CreateBlogModel): Promise<BlogModel> {
 		const blog = await blogCollection.insertOne({ ...newBlog });
@@ -11,8 +12,8 @@ export class BlogRepository {
 			id: blog.insertedId.toString(),
 		};
 	}
-	static async createPostToBlog(blogId: string, postData: CreatePostBlogModel) {
-		const blog = await BlogQueryRepository.getBlogById(blogId);
+	static async createPostToBlog(blogId: string, postData: CreatePostBlogModel): Promise<string> {
+		const blog: BlogModel | null = await BlogQueryRepository.getBlogById(blogId);
 
 		const post = {
 			title: postData.title,

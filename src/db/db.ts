@@ -1,5 +1,5 @@
-import { MongoClient } from 'mongodb';
-import { BlogDBType, PostDBType, UserDBType } from '../types/db/db';
+import {MongoClient} from 'mongodb';
+import {BlogDBType, PostDBType, UserDBType} from '../types/db/db';
 import dotenv from 'dotenv'
 
 dotenv.config();
@@ -14,7 +14,7 @@ export const blogCollection = dataBase.collection<BlogDBType>('blogs');
 export const postCollection = dataBase.collection<PostDBType>('posts');
 export const userCollection = dataBase.collection<UserDBType>('users');
 
-export const runDB = async () => {
+export const runDB = async (): Promise<void> => {
 	try {
 		await client.connect();
 		await client.db('admin').command({ ping: 1 });

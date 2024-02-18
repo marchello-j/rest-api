@@ -1,7 +1,7 @@
-import { CreatePostModel, UpdatePostModel } from '../../types/posts/input';
-import { PostModel } from '../../types/posts/output';
-import { postCollection } from '../../db/db';
-import { ObjectId } from 'mongodb';
+import {CreatePostModel, UpdatePostModel} from '../../types/posts/input';
+import {PostModel} from '../../types/posts/output';
+import {postCollection} from '../../db/db';
+import {ObjectId} from 'mongodb';
 
 export class PostRepository {
 	static async createPost(newPost: CreatePostModel): Promise<PostModel | null> {
@@ -25,7 +25,7 @@ export class PostRepository {
 		);
 		return !!updateResult.matchedCount;
 	}
-	static async deletePost(id: string) {
+	static async deletePost(id: string): Promise<boolean> {
 		const resDelete = await postCollection.deleteOne({ _id: new ObjectId(id) });
 		if (!ObjectId.isValid(id)) {
 			return false;

@@ -4,21 +4,21 @@ const nameValidation = body('name')
 	.isString()
 	.trim()
 	.isLength({ min: 1, max: 15 })
-	.withMessage('Incorrect lenght');
+	.withMessage('Incorrect length');
 
 const descriptionValidation = body('description')
 	.isString()
 	.trim()
 	.isLength({ min: 1, max: 500 })
-	.withMessage('Incorrect lenght must be min 1 max 500 symbol');
+	.withMessage('Incorrect length must be min 1 max 500 symbol');
 
 const websiteUrlValidation = body('websiteUrl')
 	.isString()
 	.trim()
 	.isLength({ min: 1, max: 100 })
-	.withMessage('Incorrect lenght must be min 1 max 100 symbol')
+	.withMessage('Incorrect length must be min 1 max 100 symbol')
 	.matches('^https://([a-zA-Z0-9_-]+.)+[a-zA-Z0-9_-]+(/[a-zA-Z0-9_-]+)*/?$')
-	.withMessage('Inncorrect website url');
+	.withMessage('Incorrect website url');
 
 export const blogValidation = () => [
 	nameValidation,

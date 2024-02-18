@@ -1,19 +1,19 @@
-import { BlogModel } from '../../types/blogs/output';
-import { blogCollection, postCollection } from '../../db/db';
-import { blogMapper } from '../../types/blogs/mapers';
-import { ObjectId } from 'mongodb';
-import { QueryBlogInput } from '../../types/blogs/query';
-import { ResponseBlogModel } from '../../types/blogs/output';
-import { postMapper } from '../../types/posts/mappers';
-import { QueryPostInput } from '../../types/posts/query';
+import {BlogModel, ResponseBlogModel} from '../../types/blogs/output';
+import {blogCollection, postCollection} from '../../db/db';
+import {blogMapper} from '../../types/blogs/mapers';
+import {ObjectId, WithId} from 'mongodb';
+import {QueryBlogInput} from '../../types/blogs/query';
+import {postMapper} from '../../types/posts/mappers';
+import {QueryPostInput} from '../../types/posts/query';
+import {BlogDBType, PostDBType} from "../../types/db/db";
 
 export class BlogQueryRepository {
 	static async getAllBlogs(sortData: QueryBlogInput): Promise<ResponseBlogModel> {
-		const searchNameTerm = sortData.searchNameTerm ?? null;
-		const sortBy = sortData.sortBy ?? 'createdAt';
-		const sortDirection = sortData.sortDirection ?? 'desc';
-		const pageNumber = sortData.pageNumber ?? 1;
-		const pageSize = sortData.pageSize ?? 10;
+		const searchNameTerm: string | null = sortData.searchNameTerm ?? null;
+		const sortBy: string = sortData.sortBy ?? 'createdAt';
+		const sortDirection: string= sortData.sortDirection ?? 'desc';
+		const pageNumber: number = sortData.pageNumber ?? 1;
+		const pageSize: number = sortData.pageSize ?? 10;
 		let filter = {};
 		if (searchNameTerm) {
 			filter = {
@@ -26,7 +26,7 @@ export class BlogQueryRepository {
 				[sortBy]: 1,
 			};
 		}
-		const blogs = await blogCollection
+		const blogs: WithId<BlogDBType>[] = await blogCollection
 			.find(filter)
 			.sort(sort)
 			.skip((+pageNumber - 1) * +pageSize)
@@ -46,17 +46,17 @@ export class BlogQueryRepository {
 		if (!ObjectId.isValid(id)) {
 			return null;
 		}
-		const blog = await blogCollection.findOne({ _id: new ObjectId(id) });
+		const blog: WithId<BlogDBType> | null = await blogCollection.findOne({ _id: new ObjectId(id) });
 		if (!blog) {
 			return null;
 		}
 		return blogMapper(blog);
 	}
 	static async getAllPostsInBlog(sortData: QueryPostInput, blogId: string) {
-		const sortBy = sortData.sortBy ?? 'createdAt';
-		const sortDirection = sortData.sortDirection ?? 'desc';
-		const pageNumber = sortData.pageNumber ?? 1;
-		const pageSize = sortData.pageSize ?? 10;
+		const sortBy: string = sortData.sortBy ?? 'createdAt';
+		const sortDirection: string = sortData.sortDirection ?? 'desc';
+		const pageNumber: number = sortData.pageNumber ?? 1;
+		const pageSize: number = sortData.pageSize ?? 10;
 
 		let sort: { [key: string]: 1 | -1 } = { [sortBy]: -1 };
 		if (sortDirection === 'asc') {
@@ -64,16 +64,16 @@ export class BlogQueryRepository {
 				[sortBy]: 1,
 			};
 		}
-		const blogs = await postCollection
+		const blogs: WithId<PostDBType>[] = await postCollection
 			.find({ blogId })
 			.sort(sort)
 			.skip((+pageNumber - 1) * +pageSize)
 			.limit(+pageSize)
 			.toArray();
 
-		const totalCount = await postCollection.countDocuments({ blogId });
+		const totalCount: number = await postCollection.countDocuments({ blogId });
 
-		const pagesCount = Math.ceil(totalCount / +pageSize);
+		const pagesCount: number = Math.ceil(totalCount / +pageSize);
 
 		return {
 			pagesCount,

@@ -1,11 +1,12 @@
-import { BlogQueryRepository } from '../repositories/blogs/blog-query-repository';
-import { BlogRepository } from '../repositories/blogs/blog-repository';
-import { PostQueryRepository } from '../repositories/posts/post-query-repository';
-import { CreateBlogModel, UpdateBlogModel } from '../types/blogs/input';
-import { CreatePostBlogModel } from '../types/blogs/input';
+import {BlogQueryRepository} from '../repositories/blogs/blog-query-repository';
+import {BlogRepository} from '../repositories/blogs/blog-repository';
+import {PostQueryRepository} from '../repositories/posts/post-query-repository';
+import {CreateBlogModel, CreatePostBlogModel, UpdateBlogModel} from '../types/blogs/input';
+import {BlogModel} from "../types/blogs/output";
+import {PostModel} from "../types/posts/output";
 
 export class BlogService {
-	static async addBlog(createData: CreateBlogModel) {
+	static async addBlog(createData: CreateBlogModel): Promise<BlogModel> {
 		const newBlog = {
 			name: createData.name,
 			description: createData.description,
@@ -17,8 +18,8 @@ export class BlogService {
 		return createdBlog;
 	}
 
-	static async addPostToBlog(blogId: string, postData: CreatePostBlogModel) {
-		const blog = await BlogQueryRepository.getBlogById(blogId);
+	static async addPostToBlog(blogId: string, postData: CreatePostBlogModel): Promise<PostModel | null> {
+		const blog: BlogModel| null = await BlogQueryRepository.getBlogById(blogId);
 		if (!blog) {
 			return null;
 		}
@@ -27,17 +28,15 @@ export class BlogService {
 			shortDescription: postData.shortDescription,
 			content: postData.content,
 		};
-		const createPostId = await BlogRepository.createPostToBlog(blogId, newPost);
+		const createPostId : string = await BlogRepository.createPostToBlog(blogId, newPost);
 
-		const post = await PostQueryRepository.getPostById(createPostId);
-		return post;
+		return await PostQueryRepository.getPostById(createPostId);
 	}
-	static async updatePostToBlog(blogID: string, data: UpdateBlogModel) {
+	static async updatePostToBlog(blogID: string, data: UpdateBlogModel): Promise<boolean | null> {
 		const blog = await BlogQueryRepository.getBlogById(blogID);
 		if (!blog) {
 			return null;
 		}
-		const resault = await BlogRepository.updateBlog(blogID, data);
-		return resault;
+		return await BlogRepository.updateBlog(blogID, data);
 	}
 }
