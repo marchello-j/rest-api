@@ -3,10 +3,13 @@ import { authMiddleware } from '../middleware/auth/auth-middleware'
 import { commentValidation } from '../validators/comment-validation'
 import { feedbackService } from '../domain/feedback-service'
 import { HTTP_STATUSES } from '../uitls/utils'
+import { Params, RequestWithParams } from '../types/common'
+import { BlogRepository } from '../repositories/blogs/blog-repository'
+import { FeedbackRepository } from '../repositories/feedbacks/feedback-repository'
 
 export const feedbacksRouter = Router({})
 
-feedbacksRouter.post(
+feedbacksRouter.put(
 	'/',
 	authMiddleware,
 	commentValidation(),
@@ -19,4 +22,17 @@ feedbacksRouter.post(
 	}
 )
 
-feedbacksRouter.post('put', async (req: Request, res: Response) => {})
+feedbacksRouter.delete(
+	'/:id',
+	authMiddleware,
+	async (req: RequestWithParams<Params>, res: Response) => {
+		const id: string = req.params.id
+		const comment: boolean = await FeedbackRepository.deleteComment(id)
+		if (!comment) {
+			return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
+		}
+		await BlogRepository.deleteBlog(id)
+		res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
+		return
+	}
+)
