@@ -1,39 +1,42 @@
-import request from 'supertest';
-import { app } from '../src/settings';
-import { BlogModel } from '../src/types/blogs/output';
-import { MongoClient } from 'mongodb';
-import dotenv from 'dotenv';
-import { HTTP_STATUSES } from '../src/uitls/utils';
-dotenv.config();
+import request from 'supertest'
+import { app } from '../src/settings'
+import { BlogModel } from '../src/types/blogs/output'
+import { MongoClient } from 'mongodb'
+import dotenv from 'dotenv'
+import { HTTP_STATUSES } from '../src/uitls/utils'
 
-const dbName = 'hw';
-const url = process.env.MONGO_URL || `mongodb://localhost:27017${dbName}`;
+dotenv.config()
+
+const dbName = 'hw'
+const url = process.env.MONGO_URL || `mongodb://localhost:27017${dbName}`
 describe('/blogs', () => {
-	const client = new MongoClient(url);
-	let newBlog: BlogModel | null;
+	const client = new MongoClient(url)
+	let newBlog: BlogModel | null
 	beforeAll(async () => {
-		await client.connect();
-	});
+		await client.connect()
+	})
 
 	afterAll(async () => {
-		await client.close();
-	});
+		await client.close()
+	})
 
-	afterAll((done) => done());
+	afterAll((done) => done())
 
 	it('- GET blog by ID with incorrect id', async () => {
-		await request(app).get('/blogs/2358585858585858585432').expect(HTTP_STATUSES.NOT_FOUND_404);
-	});
+		await request(app)
+			.get('/blogs/2358585858585858585432')
+			.expect(HTTP_STATUSES.NOT_FOUND_404)
+	})
 	it('- POST does not create the blog without authorization', async function () {
 		await request(app)
 			.post('/blogs')
 			.send({
 				name: 'dfadf',
 				description: 'sfasf',
-				websiteUrl: 'https://google.com',
+				websiteUrl: 'https://google.com'
 			})
-			.expect(HTTP_STATUSES.UNAUTHORAIZED_401);
-	});
+			.expect(HTTP_STATUSES.UNAUTHORAIZED_401)
+	})
 
 	it('- POST does not create the blog with incorrect data (no name, no description)', async function () {
 		const resault = await request(app)
@@ -42,11 +45,11 @@ describe('/blogs', () => {
 			.send({
 				name: '',
 				description: '',
-				websiteUrl: 'https://google.com',
+				websiteUrl: 'https://google.com'
 			})
-			.expect(HTTP_STATUSES.BAD_REQUEST_400);
-		expect(resault.body).toEqual({ errorsMessages: expect.any(Array) });
-	});
+			.expect(HTTP_STATUSES.BAD_REQUEST_400)
+		expect(resault.body).toEqual({ errorsMessages: expect.any(Array) })
+	})
 	it('+ POST create the blog with correct data', async function () {
 		const result = await request(app)
 			.post('/blogs')
@@ -54,31 +57,31 @@ describe('/blogs', () => {
 			.send({
 				name: 'Hello Title',
 				description: 'Hello Author',
-				websiteUrl: 'https://facebook.com',
+				websiteUrl: 'https://facebook.com'
 			})
-			.expect(HTTP_STATUSES.CREATED_201);
-		newBlog = result.body;
-	});
+			.expect(HTTP_STATUSES.CREATED_201)
+		newBlog = result.body
+	})
 
 	it('+ GET blog by ID with correct id', async () => {
-		await request(app).get('/blogs/' + newBlog?.id);
-	});
+		await request(app).get('/blogs/' + newBlog?.id)
+	})
 	it('GET all blogs = []', async () => {
-		const result = await request(app).get('/blogs').expect(HTTP_STATUSES.OK_200);
-		expect(result.body);
-	});
+		const result = await request(app).get('/blogs').expect(HTTP_STATUSES.OK_200)
+		expect(result.body)
+	})
 
 	it('+ PUT create the blog with correct data', async function () {
-		const result = await request(app)
+		await request(app)
 			.put(`/blogs/${newBlog?.id}`)
 			.auth('admin', 'qwerty')
 			.send({
 				name: 'Hello Title',
 				description: 'Hello Author',
-				websiteUrl: 'https://facebook.com',
+				websiteUrl: 'https://faceboogggfk.com'
 			})
-			.expect(HTTP_STATUSES.NO_CONTENT_204);
-	});
+			.expect(HTTP_STATUSES.NO_CONTENT_204)
+	})
 
 	it('- PUT try to update not found blog', async function () {
 		await request(app)
@@ -87,15 +90,20 @@ describe('/blogs', () => {
 			.send({
 				name: 'Hello Title',
 				description: 'Hello Author',
-				websiteUrl: 'https://fadfamssDSS-amdfxcvxzvasd-adfmasdf',
+				websiteUrl: 'https://fadfamssDSS-amdfxcvxzvasd-adfmasdf'
 			})
-			.expect(HTTP_STATUSES.NOT_FOUND_404);
-	});
+			.expect(HTTP_STATUSES.NOT_FOUND_404)
+	})
 
 	it('+ DELETE blog by ID with correct id', async () => {
-		await request(app).delete(`/blogs/${newBlog?.id}`).auth('admin', 'qwerty').expect(HTTP_STATUSES.NO_CONTENT_204);
-	});
+		await request(app)
+			.delete(`/blogs/${newBlog?.id}`)
+			.auth('admin', 'qwerty')
+			.expect(HTTP_STATUSES.NO_CONTENT_204)
+	})
 	it('- DELETE blog by ID with incorrect id', async () => {
-		await request(app).delete('/blogs/478364578945612332145698').auth('admin', 'qwerty');
-	});
-});
+		await request(app)
+			.delete('/blogs/478364578945612332145698')
+			.auth('admin', 'qwerty')
+	})
+})

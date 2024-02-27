@@ -20,6 +20,7 @@ import { UserDBType } from '../types/db/db'
 export const usersRoute = Router({})
 usersRoute.get(
 	'/',
+	authBasicMiddleware,
 	async (
 		req: RequestWithQuery<QueryUsersInput>,
 		res: Response<ResponseUsersModel>

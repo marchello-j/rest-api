@@ -8,7 +8,6 @@ import {
 	RequestWithQuery,
 	RequestWithQueryAndParams
 } from '../types/common'
-import { authMiddleware } from '../middleware/auth/auth-middleware'
 import { blogValidation } from '../validators/blog-validator'
 import {
 	CreateBlogModel,
@@ -22,6 +21,7 @@ import { PostModel, ResponsePostModel } from '../types/posts/output'
 import { BlogQueryRepository } from '../repositories/blogs/blog-query-repository'
 import { BlogService } from '../domain/blogs-service'
 import { HTTP_STATUSES } from '../uitls/utils'
+import { authBasicMiddleware } from '../middleware/auth/basic-middlware'
 
 export const blogRoute = Router()
 blogRoute.get(
@@ -55,7 +55,7 @@ blogRoute.get(
 )
 blogRoute.post(
 	'/',
-	authMiddleware,
+	authBasicMiddleware,
 	blogValidation(),
 	async (req: RequestWithBody<CreateBlogModel>, res: Response<BlogModel>) => {
 		const inputDto: CreateBlogModel = req.body
@@ -68,7 +68,7 @@ blogRoute.post(
 )
 blogRoute.post(
 	'/:id/posts',
-	authMiddleware,
+	authBasicMiddleware,
 	validationForBlogInPost(),
 	async (
 		req: RequestWithBodyAndParams<Params, CreatePostBlogModel>,
@@ -81,7 +81,6 @@ blogRoute.post(
 			shortDescription,
 			content
 		})
-
 		if (!newPost) {
 			res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400)
 			return
@@ -118,7 +117,7 @@ blogRoute.get(
 )
 blogRoute.put(
 	'/:id',
-	authMiddleware,
+	authBasicMiddleware,
 	blogValidation(),
 	async (
 		req: RequestWithBodyAndParams<Params, UpdateBlogModel>,
@@ -143,7 +142,7 @@ blogRoute.put(
 )
 blogRoute.delete(
 	'/:id',
-	authMiddleware,
+	authBasicMiddleware,
 	async (req: RequestWithParams<Params>, res: Response<void>) => {
 		const id: string = req.params.id
 		const blog: BlogModel | null = await BlogQueryRepository.getBlogById(id)

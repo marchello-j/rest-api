@@ -1,13 +1,20 @@
-import { Router, Request, Response } from 'express';
-import { blogCollection, postCollection, userCollection } from '../db/db';
-import { HTTP_STATUSES } from '../uitls/utils';
+import { Request, Response, Router } from 'express'
+import {
+	blogCollection,
+	feedbackCollection,
+	postCollection,
+	userCollection
+} from '../db/db'
+import { HTTP_STATUSES } from '../uitls/utils'
 
-export const deleteAllDataRoute = Router({});
+export const deleteAllDataRoute = Router({})
 
 deleteAllDataRoute.delete('/', async (req: Request, res: Response) => {
-	console.log('Route working');
-	await blogCollection.deleteMany({});
-	await postCollection.deleteMany({});
-	await userCollection.deleteMany({});
-	res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
-});
+	console.log('Route working')
+	await blogCollection.deleteMany({})
+	await postCollection.deleteMany({})
+	await userCollection.deleteMany({})
+	await feedbackCollection.deleteMany({})
+
+	res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
+})

@@ -1,9 +1,7 @@
-import {feedbackCollection} from "../../db/db";
-
+import { feedbackCollection } from '../../db/db'
 
 export class FeedbackQueryRepository {
 	static async getAllFeedbacks() {
-		return  await feedbackCollection.find({})
+		return feedbackCollection.find({})
 	}
-
 }
