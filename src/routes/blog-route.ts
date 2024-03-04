@@ -82,7 +82,7 @@ blogRoute.post(
 			content
 		})
 		if (!newPost) {
-			res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400)
+			res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
 			return
 		}
 		return res.status(HTTP_STATUSES.CREATED_201).send(newPost)
@@ -105,7 +105,7 @@ blogRoute.get(
 
 		const blog: BlogModel | null = await BlogQueryRepository.getBlogById(blogId)
 		if (!blog) {
-			res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
+			res.status(HTTP_STATUSES.NOT_FOUND_404)
 			return
 		}
 		const postInBlog = await BlogQueryRepository.getAllPostsInBlog(

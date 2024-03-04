@@ -6,7 +6,7 @@ import { postRoute } from './routes/post-route'
 import { usersRoute } from './routes/users-route'
 import { deleteAllDataRoute } from './routes/testing-route'
 import { authRouter } from './routes/auth-router'
-import { feedbacksRouter } from './routes/feedbacks-router'
+import { commentsRoute } from './routes/comments-route'
 
 export const app = express()
 app.use(express.json())
@@ -23,4 +23,4 @@ app.use(RouterPaths.blogs, blogRoute)
 app.use(RouterPaths.posts, postRoute)
 app.use(RouterPaths.users, usersRoute)
 app.use(RouterPaths.auth, authRouter)
-app.use(RouterPaths.feedback, feedbacksRouter)
+app.use(RouterPaths.feedback, commentsRoute)

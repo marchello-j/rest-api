@@ -1,7 +1,7 @@
 import { Request, Response, Router } from 'express'
 import {
 	blogCollection,
-	feedbackCollection,
+	commentsCollection,
 	postCollection,
 	userCollection
 } from '../db/db'
@@ -14,7 +14,7 @@ deleteAllDataRoute.delete('/', async (req: Request, res: Response) => {
 	await blogCollection.deleteMany({})
 	await postCollection.deleteMany({})
 	await userCollection.deleteMany({})
-	await feedbackCollection.deleteMany({})
+	await commentsCollection.deleteMany({})
 
 	res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
 })
