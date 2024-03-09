@@ -1,4 +1,5 @@
 export type CreateCommentsModel = {
+	postId: string
 	content: string
 	commentatorInfo: {
 		userId: string

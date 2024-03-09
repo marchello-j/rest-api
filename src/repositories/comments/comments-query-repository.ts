@@ -9,8 +9,9 @@ import {
 import { CommentsDBType } from '../../types/db/db'
 
 export class CommentsQueryRepository {
-	static async getAllComments(
-		sortData: QueryCommentsInput
+	static async getAllCommentsForSpecificPost(
+		sortData: QueryCommentsInput,
+		postId: string
 	): Promise<ResponseCommentsModel> {
 		const pageNumber: number = sortData.pageNumber ?? 1
 		const pageSize: number = sortData.pageSize ?? 10
@@ -24,12 +25,14 @@ export class CommentsQueryRepository {
 			}
 		}
 		const comments: WithId<CommentsDBType>[] = await commentsCollection
-			.find({})
+			.find({ postId })
 			.sort(sort)
 			.skip((+pageNumber - 1) * +pageSize)
 			.limit(+pageSize)
 			.toArray()
-		const totalCount: number = await commentsCollection.countDocuments({})
+		const totalCount: number = await commentsCollection.countDocuments({
+			postId
+		})
 		const pagesCount: number = Math.ceil(totalCount / +pageSize)
 		return {
 			pagesCount: +pagesCount,

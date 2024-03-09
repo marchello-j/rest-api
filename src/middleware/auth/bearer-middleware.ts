@@ -18,9 +18,12 @@ export const bearerAuthMiddleware = async (
 	}
 	const token: string = req.headers.authorization.split(' ')[1]
 	const userId: ObjectId | null = await jwtService.getUserIdByToken(token)
+	console.log(token)
+	console.log(userId)
 	if (userId) {
 		req.user = await userQueryRepository.findUserById(userId.toString())
 		next()
+	} else {
+		res.sendStatus(HTTP_STATUSES.UNAUTHORAIZED_401)
 	}
-	res.send(HTTP_STATUSES.UNAUTHORAIZED_401)
 }

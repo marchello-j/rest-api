@@ -4,6 +4,7 @@ import { userQueryRepository } from '../repositories/users/users-query-repositor
 import { CreateUserModel } from '../types/users/input'
 import { UsersModel } from '../types/users/output'
 import { UserDBType } from '../types/db/db'
+import { WithId } from 'mongodb'
 
 export const userService = {
 	async createUser(createObjUser: CreateUserModel): Promise<UsersModel> {
@@ -24,8 +25,8 @@ export const userService = {
 	async checkCredentials(
 		loginOrEmail: string,
 		password: string
-	): Promise<UserDBType | null> {
-		const user: UserDBType | null =
+	): Promise<WithId<UserDBType> | null> {
+		const user: WithId<UserDBType> | null =
 			await userQueryRepository.findByLoginOrEmail(loginOrEmail)
 		if (!user) return null
 		const passwordHash: string = await this._generateHash(

@@ -5,7 +5,8 @@ import {
 	RequestWithBody,
 	RequestWithBodyAndParams,
 	RequestWithParams,
-	RequestWithQuery
+	RequestWithQuery,
+	RequestWithQueryAndParams
 } from '../types/common'
 import { PostModel, ResponsePostModel } from '../types/posts/output'
 import { postValidation } from '../validators/post-validattion'
@@ -19,10 +20,10 @@ import { commentsService } from '../domain/comments-service'
 import { bearerAuthMiddleware } from '../middleware/auth/bearer-middleware'
 import { CreateCommentsModel } from '../types/comments/input'
 import { QueryCommentsInput } from '../types/comments/query'
-import { ResponseCommentsModel } from '../types/comments/output'
+import { CommentsModel, ResponseCommentsModel } from '../types/comments/output'
 import { CommentsQueryRepository } from '../repositories/comments/comments-query-repository'
 
-export const postRoute = Router()
+export const postRoute = Router({})
 
 postRoute.get(
 	'/',
@@ -101,7 +102,7 @@ postRoute.delete(
 )
 
 postRoute.post(
-	'/ posts/:id/comments',
+	'/:id/comments',
 	bearerAuthMiddleware,
 	async (
 		req: RequestWithBodyAndParams<Params, CreateCommentsModel>,
@@ -109,33 +110,52 @@ postRoute.post(
 	) => {
 		const userId: string = req.user!._id.toString()
 		const userLogin: string = req.user!.login.toString()
-		const postId: string = req.params.id
+		const postIdFromParams: string = req.params.id
 		const { content } = req.body
-		const newComment: CreateCommentsModel | null =
+		const exsistngPost: PostModel | null =
+			await PostQueryRepository.getPostById(postIdFromParams)
+		if (!exsistngPost) {
+			res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
+			return
+		}
+		const newComment: CommentsModel | null =
 			await commentsService.addCommentsToPost(
-				postId,
+				postIdFromParams,
 				content,
 				userId,
 				userLogin
 			)
 		if (!newComment) {
-			res.status(HTTP_STATUSES.BAD_REQUEST_400)
+			res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400)
 			return
 		}
-		return res.status(HTTP_STATUSES.CREATED_201).send(newComment)
+		const { postId, ...commentVueModel } = newComment as any
+		return res.status(HTTP_STATUSES.CREATED_201).send(commentVueModel)
 	}
 )
 postRoute.get(
-	'/posts/postId/comments',
-	async (req: RequestWithQuery<QueryCommentsInput>, res: Response) => {
+	'/:postId/comments',
+	async (
+		req: RequestWithQueryAndParams<{ postId: string }, QueryCommentsInput>,
+		res: Response
+	) => {
+		const postId: string = req.params.postId
 		const sortData = {
 			pageNumber: req.query.pageNumber,
 			pageSize: req.query.pageSize,
 			sortBy: req.query.sortBy,
 			sortDirection: req.query.sortDirection
 		}
+		const post = await PostQueryRepository.getPostById(postId)
+		if (!post) {
+			res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
+			return
+		}
 		const comments: ResponseCommentsModel =
-			await CommentsQueryRepository.getAllComments(sortData)
+			await CommentsQueryRepository.getAllCommentsForSpecificPost(
+				sortData,
+				postId
+			)
 		res.send(comments)
 	}
 )

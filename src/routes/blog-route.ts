@@ -105,7 +105,7 @@ blogRoute.get(
 
 		const blog: BlogModel | null = await BlogQueryRepository.getBlogById(blogId)
 		if (!blog) {
-			res.status(HTTP_STATUSES.NOT_FOUND_404)
+			res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
 			return
 		}
 		const postInBlog = await BlogQueryRepository.getAllPostsInBlog(

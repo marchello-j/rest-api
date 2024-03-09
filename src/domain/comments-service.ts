@@ -1,7 +1,7 @@
 import { CommentsModel } from '../types/comments/output'
 import { CommentsQueryRepository } from '../repositories/comments/comments-query-repository'
 import { CommentsRepository } from '../repositories/comments/comments-repository'
-import { CreateCommentsModel } from '../types/comments/input'
+import { CommentsDBType } from '../types/db/db'
 
 export class commentsService {
 	static async addCommentsToPost(
@@ -9,13 +9,14 @@ export class commentsService {
 		createData: string,
 		userId: string,
 		userLogin: string
-	): Promise<CreateCommentsModel | null> {
-		const comment: CommentsModel | null =
-			await CommentsQueryRepository.getCommentById(postId)
-		if (!comment) {
-			return null
-		}
-		const newComment = {
+	): Promise<CommentsModel | null> {
+		// const comment: CommentsModel | null =
+		// 	await CommentsQueryRepository.getCommentById(postId)
+		// if (!comment) {
+		// 	return null
+		// }
+		const newComment: CommentsDBType = {
+			postId,
 			content: createData,
 			commentatorInfo: {
 				userId: userId,
