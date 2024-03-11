@@ -10,11 +10,6 @@ export class commentsService {
 		userId: string,
 		userLogin: string
 	): Promise<CommentsModel | null> {
-		// const comment: CommentsModel | null =
-		// 	await CommentsQueryRepository.getCommentById(postId)
-		// if (!comment) {
-		// 	return null
-		// }
 		const newComment: CommentsDBType = {
 			postId,
 			content: createData,
@@ -35,7 +30,10 @@ export class commentsService {
 		if (!comment) {
 			return null
 		}
-		//добавить проверку что юзер являеться владельцем комментария
+		const { id } = comment
+		if (commentId !== id) {
+			return null
+		}
 		return await CommentsRepository.updateComment(commentId, content)
 	}
 }

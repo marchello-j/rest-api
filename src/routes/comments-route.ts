@@ -25,9 +25,8 @@ commentsRoute.put(
 	) => {
 		const commentId: string = req.params.id
 		const { content } = req.body
-		const userIdFromParams: string = req.params.id
 		const exsistngPost: CommentsModel | null =
-			await CommentsQueryRepository.getCommentById(userIdFromParams)
+			await CommentsQueryRepository.getCommentById(commentId)
 		if (!exsistngPost) {
 			res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
 			return
@@ -47,7 +46,6 @@ commentsRoute.delete(
 	bearerAuthMiddleware,
 	async (req: RequestWithParams<Params>, res: Response) => {
 		const id: string = req.params.id
-		const userIdFromParams: string = req.params.id
 		const comment: CommentsModel | null =
 			await CommentsQueryRepository.getCommentById(id)
 		if (!comment) {
