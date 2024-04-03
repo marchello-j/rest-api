@@ -27,6 +27,8 @@ export const authBasicMiddleware = (
 		return
 	}
 
+	console.log(basic, token)
+
 	const decoded = Buffer.from(token, 'base64').toString()
 	const [login, password] = decoded.split(':')
 

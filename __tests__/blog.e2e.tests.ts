@@ -24,7 +24,7 @@ describe('/blogs', () => {
 
 	it('- GET blog by ID with incorrect id', async () => {
 		await request(app)
-			.get('/blogs/2358585858585858585432')
+			.get('/blogs/235858585858585858')
 			.expect(HTTP_STATUSES.NOT_FOUND_404)
 	})
 	it('- POST does not create the blog without authorization', async function () {

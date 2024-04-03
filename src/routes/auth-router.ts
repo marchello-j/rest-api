@@ -1,5 +1,4 @@
 import { Request, Response, Router } from 'express'
-import nodemailer from 'nodemailer'
 
 import { userService } from '../domain/users-service'
 import { authLoginValidation } from '../validators/auth-validation'
@@ -9,6 +8,7 @@ import { UserDBType } from '../types/db/db'
 import { bearerAuthMiddleware } from '../middleware/auth/bearer-middleware'
 import { userPostValidation } from '../validators/user-validators'
 import { WithId } from 'mongodb'
+import { emailAdapter } from '../adapters/email-adapter'
 
 export const authRouter = Router({})
 
@@ -48,30 +48,24 @@ authRouter.get(
 )
 
 authRouter.post(
-	'/send',
+	'/registration',
 	userPostValidation(),
 	async (req: Request, res: Response) => {
-		let transport = nodemailer.createTransport({
-			service: 'gmail',
-			auth: {
-				user: 'anamaryraik@gmail.com',
-				pass: 'SuperDeveloper2024'
-			}
-		})
-
-		const info = await transport.sendMail({
-			from: '"Anamary 👻" <anamaryraik@gmail.com>', // sender address
-			to: req.body.email,
-			subject: req.body.subject, // Subject line
-			text: 'Hello world?', // plain text body
-			html: req.body.html // html body
-		})
-		console.log(info)
-
-		res.send({
-			email: req.body.email,
-			message: req.body.message,
-			subject: req.body.subject
-		})
+		await emailAdapter.sendEmail(
+			req.body.login,
+			req.body.password,
+			req.body.email
+		)
+		res.sendStatus(HTTP_STATUSES.CREATED_201)
 	}
+)
+
+authRouter.post(
+	'/registration-email-resending',
+	(req: Request, res: Response) => {}
+)
+
+authRouter.post(
+	'/registration-confirmation',
+	(req: Request, res: Response) => {}
 )

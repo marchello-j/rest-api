@@ -22,6 +22,7 @@ import { CreateCommentsModel } from '../types/comments/input'
 import { QueryCommentsInput } from '../types/comments/query'
 import { CommentsModel, ResponseCommentsModel } from '../types/comments/output'
 import { CommentsQueryRepository } from '../repositories/comments/comments-query-repository'
+import { commentValidation } from '../validators/comment-validation'
 
 export const postRoute = Router({})
 
@@ -104,6 +105,7 @@ postRoute.delete(
 postRoute.post(
 	'/:id/comments',
 	bearerAuthMiddleware,
+	commentValidation(),
 	async (
 		req: RequestWithBodyAndParams<Params, CreateCommentsModel>,
 		res: Response

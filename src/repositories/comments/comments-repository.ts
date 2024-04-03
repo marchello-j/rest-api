@@ -32,7 +32,19 @@ export class CommentsRepository {
 				}
 			}
 		)
-
 		return !!comment.matchedCount
+	}
+	static async findByUserAndCommentId(
+		userId: ObjectId,
+		commentId: string
+	): Promise<boolean | null> {
+		if (!ObjectId.isValid(commentId)) return null
+		console.log(userId)
+		const comment = await commentsCollection.findOne({
+			_id: new ObjectId(commentId),
+			'commentatorInfo.userId': userId.toString()
+		})
+		if (comment) return true
+		return false
 	}
 }
